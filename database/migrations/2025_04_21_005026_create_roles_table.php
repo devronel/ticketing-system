@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('barangay_officials', function (Blueprint $table) {
+        Schema::create('roles', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('resident_id')->constrained('residents', 'id');
-            $table->foreignId('position_reference_id')->constrained('position_references', 'id');
-            $table->date('term_start');
-            $table->date('term_end');
+            $table->string('name');
+            $table->json('permissions');
             $table->boolean('status')->default(true);
             $table->timestamps();
         });
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('barangay_officials');
+        Schema::dropIfExists('roles');
     }
 };
