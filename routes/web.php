@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Livewire\Admin\Auth\Login as LoginIndex;
 use App\Livewire\Admin\Dashboard\Index as DashboardIndex;
+use App\Livewire\Admin\Department\Index as DepartmentIndex;
 use App\Livewire\Admin\PriorityReference\Index as PriorityReferenceIndex;
 use App\Livewire\Admin\StatusReference\Index as StatusReferenceIndex;
 use Illuminate\Support\Facades\Route;
@@ -25,4 +26,9 @@ Route::middleware(['auth'])->prefix('status-reference')->name('status-reference.
 // Priority references route
 Route::middleware(['auth'])->prefix('priority-reference')->name('priority-reference.')->group(function () {
     Route::get('/', PriorityReferenceIndex::class)->name('index');
+});
+
+// Department route
+Route::middleware(['auth'])->prefix('department')->name('department.')->group(function () {
+    Route::get('/', DepartmentIndex::class)->name('index');
 });

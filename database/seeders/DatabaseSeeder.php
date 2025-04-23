@@ -22,7 +22,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserSeeder::class,
             StatusReferenceSeeder::class,
-            PriorityReferenceSeeder::class
+            PriorityReferenceSeeder::class,
+            DepartmentSeeder::class,
         ]);
     }
 }
