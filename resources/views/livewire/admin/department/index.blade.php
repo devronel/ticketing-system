@@ -24,10 +24,17 @@
                     <tbody>
                         @forelse ($departments as $department)
                             <tr class="bg-white border-b border-gray-200 divide-x divide-gray-200">
-                                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{{ $department->id }}</td>
-                                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{{ $department->name }}</td>
-                                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{{ $department->status }}</td>
-                                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">
+                                <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-500">{{ $department->id }}</td>
+                                <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-500">{{ $department->name }}</td>
+                                <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-500">
+                                    <div>
+                                        <select wire:change="$dispatch('status-changed', { id: {{ $department->id }}, value: $event.target.value })" name="status" class=" block w-32 text-sm border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded">
+                                            <option value="1" @if($department->status) selected @endif >Active</option>
+                                            <option value="0" @if(!$department->status) selected @endif>In Active</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-500">
                                     <div>
                                         <button wire:click="fetchEdit({{ $department->id }})" type="button" class="inline-flex items-center p-1 border border-transparent shadow-sm text-sm leading-4 font-medium rounded text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
@@ -47,7 +54,10 @@
                 </div>
               </div>
             </div>
-          </div>
+            <div class=" mt-2">
+                {{ $departments->links() }}
+            </div>
+        </div>
     </div>
 
     {{-- Modal Start --}}
