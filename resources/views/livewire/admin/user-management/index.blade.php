@@ -27,8 +27,8 @@
                             <tr class="bg-white border-b border-gray-200 divide-x divide-gray-200">
                                 <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-500">{{ $user->username }}</td>
                                 <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-500">{{ $user->email }}</td>
-                                <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-500">{{ $user->department_id }}</td>
-                                <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-500">{{ $user->role_id }}</td>
+                                <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-500">{{ $user->department->name ?? null }}</td>
+                                <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-500">{{ $user->role->name ?? null }}</td>
                                 {{-- <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-500">
                                     <div>
                                         <select wire:change="$dispatch('status-changed', { id: {{ $user->id }}, value: $event.target.value })" name="status" class=" block w-32 text-sm border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded">
@@ -65,17 +65,23 @@
 
     {{-- Modal Start --}}
     <x-admin.user-management.add-modal />
+    <x-admin.user-management.edit-modal />
     {{-- Modal End --}}
 
     <script>
       document.addEventListener('livewire:init', () => {
           Alpine.data('data', () => ({
             isAddModalOpen: @entangle('isAddModalOpen'),
+            isEditModalOpen: @entangle('isEditModalOpen'),
             openAddModal(){
               this.isAddModalOpen = true;
             },
             closeAddModal(){
               this.isAddModalOpen = false;
+              this.$wire.resetComponent()
+            },
+            closeEditModal(){
+              this.isEditModalOpen = false;
               this.$wire.resetComponent()
             }
           }))
