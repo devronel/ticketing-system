@@ -7,6 +7,7 @@ use App\Livewire\Admin\Department\Index as DepartmentIndex;
 use App\Livewire\Admin\PriorityReference\Index as PriorityReferenceIndex;
 use App\Livewire\Admin\Roles\Index as RolesIndex;
 use App\Livewire\Admin\StatusReference\Index as StatusReferenceIndex;
+use App\Livewire\Admin\UserManagement\Index as UserManagementIndex;
 use Illuminate\Support\Facades\Route;
 
 // Authentication
@@ -37,4 +38,9 @@ Route::middleware(['auth'])->prefix('department')->name('department.')->group(fu
 // Roles route
 Route::middleware(['auth'])->prefix('roles')->name('roles.')->group(function () {
     Route::get('/', RolesIndex::class)->name('index');
+});
+
+// User management route
+Route::middleware(['auth'])->prefix('user-management')->name('user-management.')->group(function () {
+    Route::get('/', UserManagementIndex::class)->name('index');
 });
