@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\User;
+use App\Policies\DashboardPolicy;
+use App\Policies\UserPolicy;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +23,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // User
+        Gate::define('view-user', [UserPolicy::class, 'view']);
+
+        // Dashboard
+        Gate::define('view-dashboard', [DashboardPolicy::class, 'view']);
     }
 }
