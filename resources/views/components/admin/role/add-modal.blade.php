@@ -36,17 +36,19 @@
                         <div class="ml-2">
                             @foreach ($this->permissions as $key => $pages)
                                 <div class="mb-2">
-                                    <p class=" text-gray-500 text-sm">{{ $pages['description'] }}</p>
+                                    <p class=" text-sm font-bold text-gray-800">{{ $pages['description'] }}</p>
                                     <div class=" ml-4">
                                         @foreach ($pages['sections'] as $page => $sections)
-                                            <p class=" text-xs font-bold">{{ $page }}</p>
-                                            <div class=" ml-6 flex items-center gap-3">
-                                              @foreach ($sections as $section => $action)
-                                                  <div>
-                                                    <input wire:model="permissions.{{ $key }}.sections.{{ $page }}.{{ $section }}" id="{{ $key }}.sections.{{ $page }}.{{ $section }}" type="checkbox" class="text-sm">
-                                                    <label for="{{ $key }}.sections.{{ $page }}.{{ $section }}" class=" text-sm">{{ $section }}</label>
-                                                  </div>
-                                              @endforeach
+                                            <div class="mb-2">
+                                                <p class="text-gray-700 text-xs font-medium capitalize">{{ $page }}</p>
+                                                <div class=" ml-6 flex items-center gap-3">
+                                                  @foreach ($sections as $section => $action)
+                                                      <div>
+                                                        <input wire:model="permissions.{{ $key }}.sections.{{ $page }}.{{ $section }}" id="{{ $key }}.sections.{{ $page }}.{{ $section }}" type="checkbox" class="text-sm">
+                                                        <label for="{{ $key }}.sections.{{ $page }}.{{ $section }}" class=" text-sm">{{ $section }}</label>
+                                                      </div>
+                                                  @endforeach
+                                                </div>
                                             </div>
                                         @endforeach
                                     </div>

@@ -31,11 +31,22 @@ class Index extends Component
     // ];
 
     public $permissions = [
-        'dashboard' => [
-            'description' => 'Dashboard',
+        'dashboard_management' => [
+            'description' => 'Dashboard Management',
             'sections' => [
                 'dashboard' => [
                     'can_view' => false
+                ]
+            ]
+        ],
+        'ticket_management' => [
+            'description' => 'Ticket Management',
+            'sections' => [
+                'ticket' => [
+                    'can_create' => false,
+                    'can_view' => false,
+                    'can_edit' => false,
+                    'can_delete' => false,
                 ]
             ]
         ],
@@ -53,9 +64,26 @@ class Index extends Component
                     'can_edit' => false,
                     'can_delete' => false,
                     'can_view' => false,
+                ],
+                'department' => [
+                    'can_create' => false,
+                    'can_edit' => false,
+                    'can_delete' => false,
+                    'can_view' => false,
                 ]
             ]
-        ]
+        ],
+        'references_management' => [
+            'description' => 'References Management',
+            'sections' => [
+                'reference' => [
+                    'can_create' => false,
+                    'can_view' => false,
+                    'can_edit' => false,
+                    'can_delete' => false,
+                ]
+            ]
+        ],
     ];
 
     #[On('status-changed')]
@@ -72,7 +100,6 @@ class Index extends Component
 
     public function save()
     {
-        dd($this->permissions);
         try {
             $roles = Roles::updateOrCreate(
                 ['id' => $this->roleId],

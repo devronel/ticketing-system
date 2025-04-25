@@ -4,7 +4,7 @@ namespace App\Policies;
 
 use App\Models\User;
 
-class DashboardPolicy
+class ReferencesPolicy
 {
     /**
      * Create a new policy instance.
@@ -16,6 +16,6 @@ class DashboardPolicy
 
     public function view(User $user): bool
     {
-        return $user->role['permissions']['dashboard_management']['sections']['dashboard']['can_view'];
+        return $user->role['permissions']['references_management']['sections']['reference']['can_view'];
     }
 }

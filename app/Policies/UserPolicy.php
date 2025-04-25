@@ -16,6 +16,6 @@ class UserPolicy
 
     public function view(User $user): bool
     {
-        return $user->role['permissions']['user-management']['view'];
+        return $user->role['permissions']['user_management']['sections']['user']['can_view'];
     }
 }
