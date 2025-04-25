@@ -19,16 +19,20 @@ Route::middleware(['auth'])->prefix('dashboard')->name('dashboard.')->group(func
     Route::get('/', DashboardIndex::class)->name('index');
 });
 
+Route::middleware(['auth'])->prefix('reference')->name('reference.')->group(function () {
+    Route::get('/status', StatusReferenceIndex::class)->name('status');
+    Route::get('/priority', PriorityReferenceIndex::class)->name('priority');
+});
 
 // Status references route
-Route::middleware(['auth'])->prefix('status-reference')->name('status-reference.')->group(function () {
-    Route::get('/', StatusReferenceIndex::class)->name('index');
-});
+// Route::middleware(['auth'])->prefix('status-reference')->name('status-reference.')->group(function () {
+//     Route::get('/', StatusReferenceIndex::class)->name('index');
+// });
 
 // Priority references route
-Route::middleware(['auth'])->prefix('priority-reference')->name('priority-reference.')->group(function () {
-    Route::get('/', PriorityReferenceIndex::class)->name('index');
-});
+// Route::middleware(['auth'])->prefix('priority-reference')->name('priority-reference.')->group(function () {
+//     Route::get('/', PriorityReferenceIndex::class)->name('index');
+// });
 
 // Department route
 Route::middleware(['auth'])->prefix('department')->name('department.')->group(function () {
@@ -36,11 +40,12 @@ Route::middleware(['auth'])->prefix('department')->name('department.')->group(fu
 });
 
 // Roles route
-Route::middleware(['auth'])->prefix('roles')->name('roles.')->group(function () {
-    Route::get('/', RolesIndex::class)->name('index');
-});
+// Route::middleware(['auth'])->prefix('roles')->name('roles.')->group(function () {
+//     Route::get('/', RolesIndex::class)->name('index');
+// });
 
 // User management route
 Route::middleware(['auth'])->prefix('user-management')->name('user-management.')->group(function () {
     Route::get('/', UserManagementIndex::class)->name('index');
+    Route::get('/roles', RolesIndex::class)->name('roles');
 });

@@ -16,6 +16,10 @@ class Index extends Component
 
     public function save()
     {
+        $this->validate([
+            'name' => 'required',
+            'color' => 'required',
+        ]);
         try {
             $statusReference = StatusReference::updateOrCreate(
                 ['id' => $this->statusReferenceId],
@@ -48,6 +52,7 @@ class Index extends Component
     public function resetComponent()
     {
         $this->reset();
+        $this->resetErrorBag();
     }
 
     public function render()

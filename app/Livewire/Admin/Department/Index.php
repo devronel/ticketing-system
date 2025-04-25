@@ -31,6 +31,9 @@ class Index extends Component
 
     public function save()
     {
+        $this->validate([
+            'name' => 'required'
+        ]);
         try {
             $department = Department::updateOrCreate(
                 ['id' => $this->departmentId],
@@ -59,6 +62,7 @@ class Index extends Component
     public function resetComponent()
     {
         $this->reset();
+        $this->resetErrorBag();
     }
 
     public function render()
