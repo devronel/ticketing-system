@@ -35,9 +35,9 @@ Route::middleware(['auth'])->prefix('reference')->name('reference.')->group(func
 // });
 
 // Department route
-Route::middleware(['auth'])->prefix('department')->name('department.')->group(function () {
-    Route::get('/', DepartmentIndex::class)->name('index');
-});
+// Route::middleware(['auth'])->prefix('department')->name('department.')->group(function () {
+//     Route::get('/', DepartmentIndex::class)->name('index');
+// });
 
 // Roles route
 // Route::middleware(['auth'])->prefix('roles')->name('roles.')->group(function () {
@@ -48,4 +48,5 @@ Route::middleware(['auth'])->prefix('department')->name('department.')->group(fu
 Route::middleware(['auth'])->prefix('user-management')->name('user-management.')->group(function () {
     Route::get('/', UserManagementIndex::class)->name('index');
     Route::get('/roles', RolesIndex::class)->name('roles');
+    Route::get('/department', DepartmentIndex::class)->name('department');
 });

@@ -3,7 +3,7 @@
     <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
       <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
       <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-      <div class="inline-block align-bottom bg-white rounded px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+      <div class="inline-block align-bottom bg-white rounded px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full sm:p-6">
         <div class="hidden sm:block absolute top-0 right-0 pt-4 pr-4">
           <button @click="closeAddModal()" type="button" class="bg-white rounded text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
             <span class="sr-only">Close</span>
@@ -20,7 +20,7 @@
                     <x-forms.input-field wire:model="name" type="text" name="name" id="name" label="Name" />
                     <div class=" mt-2">
                         <p class="mb-1">Permissions</p>
-                        <div class="ml-2">
+                        {{-- <div class="ml-2">
                             @foreach ($this->permissions as $section => $actions)
                                 <div>
                                     <p class=" text-sm capitalize">{{ str_replace('-', ' ', $section) }}</p>
@@ -30,6 +30,26 @@
                                             <label for="{{ $section }}.{{ $action }}" class=" text-sm">{{ $action }}</label>
                                         </div>
                                     @endforeach
+                                </div>
+                            @endforeach
+                        </div> --}}
+                        <div class="ml-2">
+                            @foreach ($this->permissions as $key => $pages)
+                                <div class="mb-2">
+                                    <p class=" text-gray-500 text-sm">{{ $pages['description'] }}</p>
+                                    <div class=" ml-4">
+                                        @foreach ($pages['sections'] as $page => $sections)
+                                            <p class=" text-xs font-bold">{{ $page }}</p>
+                                            <div class=" ml-6 flex items-center gap-3">
+                                              @foreach ($sections as $section => $action)
+                                                  <div>
+                                                    <input wire:model="permissions.{{ $key }}.sections.{{ $page }}.{{ $section }}" id="{{ $key }}.sections.{{ $page }}.{{ $section }}" type="checkbox" class="text-sm">
+                                                    <label for="{{ $key }}.sections.{{ $page }}.{{ $section }}" class=" text-sm">{{ $section }}</label>
+                                                  </div>
+                                              @endforeach
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 </div>
                             @endforeach
                         </div>
