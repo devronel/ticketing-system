@@ -7,29 +7,23 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Roles extends Model
 {
-    protected $fillable = [
-        'name',
-        'permissions',
-        'status'
-    ];
+    protected $fillable = ['name'];
 
-    protected $casts = [
-        'permissions' => 'array'
-    ];
+    protected $with = ['permissions'];
 
-    public function getShortPermissionsStringAttribute(): string
-    {
-        $chunks = [];
+    // public function getShortPermissionsStringAttribute(): string
+    // {
+    //     $chunks = [];
 
-        foreach ($this->permissions as $section => $actions) {
-            $allowed = array_keys(array_filter($actions));
-            if (!empty($allowed)) {
-                $chunks[] = $section . ': ' . implode(', ', $allowed);
-            }
-        }
+    //     foreach ($this->permissions as $section => $actions) {
+    //         $allowed = array_keys(array_filter($actions));
+    //         if (!empty($allowed)) {
+    //             $chunks[] = $section . ': ' . implode(', ', $allowed);
+    //         }
+    //     }
 
-        return implode(' | ', $chunks);
-    }
+    //     return implode(' | ', $chunks);
+    // }
 
     public function permissions(): BelongsToMany
     {

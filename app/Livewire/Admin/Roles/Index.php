@@ -12,23 +12,6 @@ class Index extends Component
 
     public $roleId;
     public $name;
-    // public $permissions = [
-    //     'dashboard' => [
-    //         'view' => false
-    //     ],
-    //     'ticket-management' => [
-    //         'view' => false,
-    //         'create' => false,
-    //         'update' => false,
-    //         'delete' => false,
-    //     ],
-    //     'user-management' => [
-    //         'view' => false,
-    //         'create' => false,
-    //         'update' => false,
-    //         'delete' => false,
-    //     ],
-    // ];
 
     public $permissions = [
         'dashboard_management' => [
@@ -123,7 +106,7 @@ class Index extends Component
             $role = Roles::find($id);
             $this->roleId = $role->id;
             $this->name = $role->name;
-            $this->permissions = $role->permissions;
+            $this->permissions = [];
         } catch (\Throwable $th) {
             dd($th->getMessage());
         }

@@ -26,7 +26,7 @@ class EditModal extends Component
     {
         return view('components.admin.user-management.edit-modal', [
             'departments' => Department::where('status', true)->get(),
-            'roles' => Roles::where('status', true)->get()
+            'roles' => Roles::all()
         ]);
     }
 }

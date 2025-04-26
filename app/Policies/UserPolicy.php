@@ -17,7 +17,6 @@ class UserPolicy
 
     public function view(User $user): bool
     {
-        dd($user);
-        return true;
+        return $user->hasPermission('view-user');
     }
 }

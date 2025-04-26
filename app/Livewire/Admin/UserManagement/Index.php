@@ -24,7 +24,7 @@ class Index extends Component
     public function mount()
     {
         $this->departments = Department::where('status', true)->get();
-        $this->roles = Roles::where('status', true)->get();
+        $this->roles = Roles::all();
     }
 
     public function save()

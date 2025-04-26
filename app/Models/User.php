@@ -14,17 +14,16 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    protected $with = ['role.permissions'];
+    protected $with = ['role'];
 
-    // public function hasPermission(string $permissionName): bool
-    // {
-    //     Log::info($this->role->permissions);
-    //     if (!$this->role) {
-    //         return false;
-    //     }
+    public function hasPermission(string $permissionName): bool
+    {
+        if (!$this->role) {
+            return false;
+        }
 
-    //     return $this->role->permissions->contains('name', $permissionName);
-    // }
+        return $this->role->permissions->contains('name', $permissionName);
+    }
 
     public function department(): HasOne
     {

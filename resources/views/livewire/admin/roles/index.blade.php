@@ -16,8 +16,6 @@
                     <thead class="bg-gray-700">
                       <tr class="divide-x divide-gray-200">
                         <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Name</th>
-                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Permissions</th>
-                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Status</th>
                         <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Action</th>
                       </tr>
                     </thead>
@@ -25,17 +23,14 @@
                         @forelse ($roles as $role)
                             <tr class="bg-white border-b border-gray-200 divide-x divide-gray-200">
                                 <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-500">{{ $role->name }}</td>
-                                <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-500">
-                                  {{ \Str::limit($role->short_permissions_string, 50, '...') }}
-                                </td>
-                                <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-500">
+                                {{-- <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-500">
                                     <div>
                                         <select wire:change="$dispatch('status-changed', { id: {{ $role->id }}, value: $event.target.value })" name="status" class=" block w-32 text-sm border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded">
                                             <option value="1" @if($role->status) selected @endif >Active</option>
                                             <option value="0" @if(!$role->status) selected @endif>In Active</option>
                                         </select>
                                     </div>
-                                </td>
+                                </td> --}}
                                 <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-500">
                                     <div>
                                         <button wire:click="fetchEdit({{ $role->id }})" type="button" class="inline-flex items-center p-1 border border-transparent shadow-sm text-sm leading-4 font-medium rounded text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
