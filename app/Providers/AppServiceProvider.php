@@ -28,9 +28,9 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('view-user', [UserPolicy::class, 'view']);
 
         // Dashboard
-        Gate::define('view-dashboard', [DashboardPolicy::class, 'view']);
+        // Gate::define('view-dashboard', [DashboardPolicy::class, 'view']);
 
         // References
-        Gate::define('view-reference', [ReferencesPolicy::class, 'view']);
+        // Gate::define('view-reference', [ReferencesPolicy::class, 'view']);
     }
 }

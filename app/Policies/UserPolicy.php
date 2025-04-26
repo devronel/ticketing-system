@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class UserPolicy
 {
@@ -16,6 +17,7 @@ class UserPolicy
 
     public function view(User $user): bool
     {
-        return $user->role['permissions']['user_management']['sections']['user']['can_view'];
+        dd($user);
+        return true;
     }
 }
