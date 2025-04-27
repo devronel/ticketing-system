@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Roles;
 
+use App\Models\Permission;
 use App\Models\Roles;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -9,65 +10,72 @@ use Livewire\Component;
 class Index extends Component
 {
     public $isAddModalOpen = false;
+    public $permissions = [];
 
     public $roleId;
     public $name;
+    public $permission = [];
 
-    public $permissions = [
-        'dashboard_management' => [
-            'description' => 'Dashboard Management',
-            'sections' => [
-                'dashboard' => [
-                    'can_view' => false
-                ]
-            ]
-        ],
-        'ticket_management' => [
-            'description' => 'Ticket Management',
-            'sections' => [
-                'ticket' => [
-                    'can_create' => false,
-                    'can_view' => false,
-                    'can_edit' => false,
-                    'can_delete' => false,
-                ]
-            ]
-        ],
-        'user_management' => [
-            'description' => 'User Management',
-            'sections' => [
-                'user' => [
-                    'can_create' => false,
-                    'can_edit' => false,
-                    'can_delete' => false,
-                    'can_view' => false,
-                ],
-                'role' => [
-                    'can_create' => false,
-                    'can_edit' => false,
-                    'can_delete' => false,
-                    'can_view' => false,
-                ],
-                'department' => [
-                    'can_create' => false,
-                    'can_edit' => false,
-                    'can_delete' => false,
-                    'can_view' => false,
-                ]
-            ]
-        ],
-        'references_management' => [
-            'description' => 'References Management',
-            'sections' => [
-                'reference' => [
-                    'can_create' => false,
-                    'can_view' => false,
-                    'can_edit' => false,
-                    'can_delete' => false,
-                ]
-            ]
-        ],
-    ];
+    // public $permissions = [
+    //     'dashboard_management' => [
+    //         'description' => 'Dashboard Management',
+    //         'sections' => [
+    //             'dashboard' => [
+    //                 'can_view' => false
+    //             ]
+    //         ]
+    //     ],
+    //     'ticket_management' => [
+    //         'description' => 'Ticket Management',
+    //         'sections' => [
+    //             'ticket' => [
+    //                 'can_create' => false,
+    //                 'can_view' => false,
+    //                 'can_edit' => false,
+    //                 'can_delete' => false,
+    //             ]
+    //         ]
+    //     ],
+    //     'user_management' => [
+    //         'description' => 'User Management',
+    //         'sections' => [
+    //             'user' => [
+    //                 'can_create' => false,
+    //                 'can_edit' => false,
+    //                 'can_delete' => false,
+    //                 'can_view' => false,
+    //             ],
+    //             'role' => [
+    //                 'can_create' => false,
+    //                 'can_edit' => false,
+    //                 'can_delete' => false,
+    //                 'can_view' => false,
+    //             ],
+    //             'department' => [
+    //                 'can_create' => false,
+    //                 'can_edit' => false,
+    //                 'can_delete' => false,
+    //                 'can_view' => false,
+    //             ]
+    //         ]
+    //     ],
+    //     'references_management' => [
+    //         'description' => 'References Management',
+    //         'sections' => [
+    //             'reference' => [
+    //                 'can_create' => false,
+    //                 'can_view' => false,
+    //                 'can_edit' => false,
+    //                 'can_delete' => false,
+    //             ]
+    //         ]
+    //     ],
+    // ];
+
+    public function mount()
+    {
+        $this->permissions = Permission::all();
+    }
 
     #[On('status-changed')]
     public function changedStatus($id, $value)
@@ -84,14 +92,17 @@ class Index extends Component
     public function save()
     {
         try {
-            $roles = Roles::updateOrCreate(
+            $role = Roles::updateOrCreate(
                 ['id' => $this->roleId],
                 [
-                    'name' => $this->name,
-                    'permissions' => $this->permissions
+                    'name' => $this->name
                 ]
             );
-            if ($roles) {
+            if ($role) {
+                $selectedPermissions = array_keys(array_filter($this->permission, function ($value) {
+                    return $value === true;
+                }));
+                $role->permissions()->sync($selectedPermissions);
                 $this->resetComponent();
             }
         } catch (\Throwable $th) {
@@ -106,7 +117,9 @@ class Index extends Component
             $role = Roles::find($id);
             $this->roleId = $role->id;
             $this->name = $role->name;
-            $this->permissions = [];
+            foreach ($role->permissions as $key => $permission) {
+                $this->permission[$permission->id] = true;
+            }
         } catch (\Throwable $th) {
             dd($th->getMessage());
         }
@@ -114,7 +127,7 @@ class Index extends Component
 
     public function resetComponent()
     {
-        $this->reset();
+        $this->resetExcept(['permissions']);
     }
 
     public function render()

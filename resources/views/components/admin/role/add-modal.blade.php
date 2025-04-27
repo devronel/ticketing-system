@@ -20,20 +20,8 @@
                     <x-forms.input-field wire:model="name" type="text" name="name" id="name" label="Name" />
                     <div class=" mt-2">
                         <p class="mb-1">Permissions</p>
+
                         {{-- <div class="ml-2">
-                            @foreach ($this->permissions as $section => $actions)
-                                <div>
-                                    <p class=" text-sm capitalize">{{ str_replace('-', ' ', $section) }}</p>
-                                    @foreach ($actions as $action => $value)
-                                        <div class=" ml-3">
-                                            <input wire:model="permissions.{{ $section }}.{{ $action }}" id="{{ $section }}.{{ $action }}" type="checkbox" class="text-sm">
-                                            <label for="{{ $section }}.{{ $action }}" class=" text-sm">{{ $action }}</label>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            @endforeach
-                        </div> --}}
-                        <div class="ml-2">
                             @foreach ($this->permissions as $key => $pages)
                                 <div class="mb-2">
                                     <p class=" text-sm font-bold text-gray-800">{{ $pages['description'] }}</p>
@@ -52,6 +40,14 @@
                                             </div>
                                         @endforeach
                                     </div>
+                                </div>
+                            @endforeach
+                        </div> --}}
+                        <div class="  grid grid-cols-4">
+                            @foreach ($this->permissions as $permission)
+                                <div>
+                                  <input wire:model="permission.{{ $permission->id }}" type="checkbox" id="{{ $permission->name }}">
+                                  <label for="{{ $permission->name }}">{{ $permission->name }}</label>
                                 </div>
                             @endforeach
                         </div>
