@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Livewire\Admin\Auth\Login as LoginIndex;
 use App\Livewire\Admin\Dashboard\Index as DashboardIndex;
 use App\Livewire\Admin\Department\Index as DepartmentIndex;
+use App\Livewire\Admin\Permission\Index as PermissionIndex;
 use App\Livewire\Admin\PriorityReference\Index as PriorityReferenceIndex;
 use App\Livewire\Admin\Roles\Index as RolesIndex;
 use App\Livewire\Admin\StatusReference\Index as StatusReferenceIndex;
@@ -47,6 +48,7 @@ Route::middleware(['auth'])->prefix('reference')->name('reference.')->group(func
 // User management route
 Route::middleware(['auth'])->prefix('user-management')->name('user-management.')->group(function () {
     Route::get('/', UserManagementIndex::class)->name('index');
-    Route::get('/roles', RolesIndex::class)->name('roles');
+    Route::get('/roles', RolesIndex::class)->name('role.index');
+    Route::get('/permissions', PermissionIndex::class)->name('permission.index');
     Route::get('/department', DepartmentIndex::class)->name('department');
 });
