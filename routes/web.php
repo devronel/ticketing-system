@@ -8,7 +8,9 @@ use App\Livewire\Admin\PriorityReference\Index as PriorityReferenceIndex;
 use App\Livewire\Admin\Roles\Index as RolesIndex;
 use App\Livewire\Admin\StatusReference\Index as StatusReferenceIndex;
 use App\Livewire\Admin\UserManagement\Index as UserManagementIndex;
-use App\Livewire\Customer\Task\Index as CustomerTaskIndex;
+use App\Livewire\Customer\Dashboard\Index as CustomerDashboardIndex;
+use App\Livewire\Customer\Ticket\Create as CustomerTicketCreate;
+use App\Livewire\Customer\Ticket\Index as CustomerTicketIndex;
 use Illuminate\Support\Facades\Route;
 
 // Authentication
@@ -38,6 +40,8 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('customer')->name('customer.')->group(function () {
-        Route::get('/', CustomerTaskIndex::class)->name('index');
+        Route::get('/', CustomerDashboardIndex::class)->name('dashboard.index');
+        Route::get('/my-ticket', CustomerTicketIndex::class)->name('ticket.index');
+        Route::get('/my-ticket/create', CustomerTicketCreate::class)->name('ticket.create');
     });
 });

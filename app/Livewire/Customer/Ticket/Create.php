@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Livewire\Customer\Task;
+namespace App\Livewire\Customer\Ticket;
 
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-class Index extends Component
+class Create extends Component
 {
     #[Layout('layouts.customer')]
     public function render()
     {
-        return view('livewire.customer.task.index');
+        return view('livewire.customer.ticket.create');
     }
 }
