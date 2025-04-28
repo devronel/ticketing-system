@@ -141,10 +141,18 @@ class RoleSeeder extends Seeder
         // ]);
 
         $permissions = [
-            'create-user',
-            'edit-user',
-            'delete-user',
-            'view-user',
+            'user.create',
+            'user.edit',
+            'user.delete',
+            'user.view',
+            'role.create',
+            'role.edit',
+            'role.delete',
+            'role.view',
+            'department.create',
+            'department.edit',
+            'department.delete',
+            'department.view',
         ];
 
         foreach ($permissions as $permissionName) {
@@ -160,13 +168,13 @@ class RoleSeeder extends Seeder
         $adminRole->permissions()->attach(Permission::all()); // Admin has all permissions
 
         $agentRole->permissions()->attach([
-            Permission::where('name', 'create-user')->first()->id,
-            Permission::where('name', 'edit-user')->first()->id,
-            Permission::where('name', 'view-user')->first()->id,
+            Permission::where('name', 'user.create')->first()->id,
+            Permission::where('name', 'user.edit')->first()->id,
+            Permission::where('name', 'user.view')->first()->id,
         ]);
 
         $customerRole->permissions()->attach([
-            Permission::where('name', 'view-user')->first()->id,
+            Permission::where('name', 'user.view')->first()->id,
         ]);
     }
 }

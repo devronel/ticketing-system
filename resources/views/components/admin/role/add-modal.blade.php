@@ -14,7 +14,7 @@
         </div>
         <div class="sm:flex sm:items-start">
           <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
-            <h3 class="text-xl leading-6 font-bold text-gray-900" id="modal-title">Manage Roles</h3>
+            <h3 class="text-xl leading-6 font-bold text-gray-900" id="modal-title">Manage Roles & Permissions</h3>
             <div class="mt-4 w-full">
                 <div class="">
                     <x-forms.input-field wire:model="name" type="text" name="name" id="name" label="Name" />
@@ -43,7 +43,7 @@
                                 </div>
                             @endforeach
                         </div> --}}
-                        <div class=" flex items-center flex-wrap gap-3">
+                        <div class="flex items-center flex-wrap gap-3">
                             @foreach ($this->permissions as $permission)
                                 <div>
                                   <input wire:model="permission.{{ $permission->id }}" type="checkbox" id="{{ $permission->name }}">

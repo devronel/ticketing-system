@@ -1,6 +1,5 @@
 <div x-data="data">
     <x-admin.page-title title="Roles & Permissions" />
-    <x-admin.tabs.roles-permission-tab />
     <div>
         <button @click="openAddModal()" type="button" class="inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="-ml-0.5 mr-2 size-4">
@@ -15,6 +14,7 @@
                         <table class="min-w-full divide-y divide-gray-200">
                           <thead class="bg-gray-700">
                             <tr class="divide-x divide-gray-200">
+                              <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">ID</th>
                               <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Name</th>
                               <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Action</th>
                             </tr>
@@ -22,6 +22,7 @@
                           <tbody>
                               @forelse ($roles as $role)
                                   <tr class="bg-white border-b border-gray-200 divide-x divide-gray-200">
+                                      <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-500">{{ $role->id }}</td>
                                       <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-500">{{ $role->name }}</td>
                                       {{-- <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-500">
                                           <div>
