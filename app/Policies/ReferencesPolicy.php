@@ -16,6 +16,21 @@ class ReferencesPolicy
 
     public function view(User $user): bool
     {
-        return $user->role['permissions']['references_management']['sections']['reference']['can_view'];
+        return $user->hasPermission('reference.view');
+    }
+
+    public function edit(User $user): bool
+    {
+        return $user->hasPermission('reference.edit');
+    }
+
+    public function create(User $user): bool
+    {
+        return $user->hasPermission('reference.create');
+    }
+
+    public function delete(User $user): bool
+    {
+        return $user->hasPermission('reference.delete');
     }
 }

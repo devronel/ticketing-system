@@ -24,16 +24,16 @@ Route::middleware(['auth'])->group(function () {
         });
 
         // References Route
-        Route::prefix('reference')->name('reference.')->group(function () {
+        Route::middleware('can:reference.view')->prefix('reference')->name('reference.')->group(function () {
             Route::get('/status', StatusReferenceIndex::class)->name('status');
             Route::get('/priority', PriorityReferenceIndex::class)->name('priority');
         });
 
         // User Management Route
         Route::prefix('user-management')->name('user-management.')->group(function () {
-            Route::get('/', UserManagementIndex::class)->name('index');
-            Route::get('/roles', RolesIndex::class)->name('role.index');
-            Route::get('/department', DepartmentIndex::class)->name('department.index');
+            Route::get('/', UserManagementIndex::class)->name('index')->middleware('can:user.view');
+            Route::get('/roles', RolesIndex::class)->name('role.index')->middleware('can:role.view');
+            Route::get('/department', DepartmentIndex::class)->name('department.index')->middleware('can:department.view');
         });
     });
 

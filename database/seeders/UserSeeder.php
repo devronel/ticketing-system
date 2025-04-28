@@ -15,13 +15,39 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $role = Roles::where('name', 'Admin')->firstOrFail();
+        $role = Roles::where('name', 'Super Admin')->firstOrFail();
+        $admin = Roles::where('name', 'Admin')->firstOrFail();
+        $agent = Roles::where('name', 'Agent')->firstOrFail();
+        $customer = Roles::where('name', 'Customer')->firstOrFail();
         DB::table('users')->insert([
-            'username' => 'lonewolf',
-            'email' => 'admin@email.com',
-            'password' => Hash::make('password'),
-            'department_id' => 1,
-            'role_id' => $role->id
+            [
+                'username' => 'lonewolf',
+                'email' => 'super-admin@email.com',
+                'password' => Hash::make('password'),
+                'department_id' => 1,
+                'role_id' => $role->id
+            ],
+            [
+                'username' => 'HC-USER-' . str_pad(mt_rand(1, 99999999), 8, '0', STR_PAD_LEFT),
+                'email' => 'PeterDSands@jourrapide.com',
+                'password' => Hash::make('password'),
+                'department_id' => 1,
+                'role_id' => $admin->id
+            ],
+            [
+                'username' => 'HC-USER-' . str_pad(mt_rand(1, 99999999), 8, '0', STR_PAD_LEFT),
+                'email' => 'DavidSChapman@armyspy.com',
+                'password' => Hash::make('password'),
+                'department_id' => 1,
+                'role_id' => $agent->id
+            ],
+            [
+                'username' => 'HC-USER-' . str_pad(mt_rand(1, 99999999), 8, '0', STR_PAD_LEFT),
+                'email' => 'KimberlyJKittle@jourrapide.com',
+                'password' => Hash::make('password'),
+                'department_id' => 1,
+                'role_id' => $customer->id
+            ]
         ]);
     }
 }

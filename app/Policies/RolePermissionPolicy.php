@@ -4,7 +4,7 @@ namespace App\Policies;
 
 use App\Models\User;
 
-class DepartmentPolicy
+class RolePermissionPolicy
 {
     /**
      * Create a new policy instance.
@@ -16,21 +16,21 @@ class DepartmentPolicy
 
     public function view(User $user): bool
     {
-        return $user->hasPermission('department.view');
+        return $user->hasPermission('role.view');
     }
 
     public function edit(User $user): bool
     {
-        return $user->hasPermission('department.edit');
+        return $user->hasPermission('role.edit');
     }
 
     public function create(User $user): bool
     {
-        return $user->hasPermission('department.create');
+        return $user->hasPermission('role.create');
     }
 
     public function delete(User $user): bool
     {
-        return $user->hasPermission('department.delete');
+        return $user->hasPermission('role.delete');
     }
 }

@@ -19,4 +19,19 @@ class UserPolicy
     {
         return $user->hasPermission('user.view');
     }
+
+    public function edit(User $user): bool
+    {
+        return $user->hasPermission('user.edit');
+    }
+
+    public function create(User $user): bool
+    {
+        return $user->hasPermission('user.create');
+    }
+
+    public function delete(User $user): bool
+    {
+        return $user->hasPermission('user.delete');
+    }
 }

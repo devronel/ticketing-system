@@ -153,6 +153,10 @@ class RoleSeeder extends Seeder
             'department.edit',
             'department.delete',
             'department.view',
+            'reference.create',
+            'reference.edit',
+            'reference.delete',
+            'reference.view',
         ];
 
         foreach ($permissions as $permissionName) {
@@ -160,12 +164,14 @@ class RoleSeeder extends Seeder
         }
 
         // Then, create roles
+        $superAdminRole = Roles::create(['name' => 'Super Admin']);
         $adminRole = Roles::create(['name' => 'Admin']);
         $agentRole = Roles::create(['name' => 'Agent']);
         $customerRole = Roles::create(['name' => 'Customer']);
 
         // Assign permissions to roles
-        $adminRole->permissions()->attach(Permission::all()); // Admin has all permissions
+        $superAdminRole->permissions()->attach(Permission::all());
+        $adminRole->permissions()->attach(Permission::all());
 
         $agentRole->permissions()->attach([
             Permission::where('name', 'user.create')->first()->id,
