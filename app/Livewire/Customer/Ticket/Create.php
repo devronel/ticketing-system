@@ -7,6 +7,15 @@ use Livewire\Component;
 
 class Create extends Component
 {
+
+    public $subject;
+    public $description;
+
+    public function save()
+    {
+        dd($this->description);
+    }
+
     #[Layout('layouts.customer')]
     public function render()
     {

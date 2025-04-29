@@ -1,6 +1,6 @@
 <div>
     <div wire:ignore>
-        <label class="block text-sm font-medium text-gray-700">
+        <label class="block text-sm font-medium text-gray-700 mb-1">
             {{ $attributes['label'] }}
             @if ($attributes['required'])
                 <span class=" text-red-500 text-sm">*</span>

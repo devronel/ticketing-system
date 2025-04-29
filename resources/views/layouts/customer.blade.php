@@ -12,7 +12,7 @@
     </head>
     <body class="h-full">
         <x-customer.navbar />
-        <div class="p-3">
+        <div class="py-6 max-w-5xl w-[90%] mx-auto">
             {{ $slot }}
         </div>
 
