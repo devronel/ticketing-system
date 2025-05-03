@@ -11,8 +11,17 @@
   </div>
   <div>
       <div>
-         <x-forms.input-field type="text" name="subject" id="subject" label="Subject" placeholder="Enter the name of your concern..." required />
+         <x-forms.input-field wire:model="subject" type="text" name="subject" id="subject" label="Subject" placeholder="Enter the name of your concern..." required />
       </div>
+      <div class="mt-4">
+         <label for="department" class="block text-sm font-medium text-gray-700">Department</label>
+         <select wire:model="department" id="department" name="department" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+            <option>--Select Options--</option>
+            @foreach ($departments as $department)
+               <option value="{{ $department->id }}">{{$department->name}}</option>
+            @endforeach
+         </select>
+         </div>
       <div class="mt-4">
          <x-forms.summernote-editor wire:model="description" id="dscription" label="Description" required />
       </div>
