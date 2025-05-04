@@ -23,6 +23,11 @@ class Ticket extends Model
         return $this->belongsTo(StatusReference::class, 'status_id', 'id');
     }
 
+    public function priority(): BelongsTo
+    {
+        return $this->belongsTo(PriorityReference::class, 'priority_id', 'id');
+    }
+
     public function department(): BelongsTo
     {
         return $this->belongsTo(Department::class, 'department_id', 'id');
@@ -31,5 +36,10 @@ class Ticket extends Model
     public function customer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'customer_id', 'id');
+    }
+
+    public function assignTo(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'assigned_to', 'id');
     }
 }

@@ -21,6 +21,8 @@
                         <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Full Name</th>
                         <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Department</th>
                         <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Status</th>
+                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Priority</th>
+                        <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Created at</th>
                         <th scope="col" class="px-4 py-2 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">Action</th>
                       </tr>
                     </thead>
@@ -31,17 +33,21 @@
                                 <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-500">{{ $ticket->customer->userDetails->full_name ?? $ticket->customer->username }}</td>
                                 <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-500">{{ $ticket->department->name }}</td>
                                 <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-300">
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium0" style="background-color: {{ $ticket->status->color }}"> {{ $ticket->status->name }}</span>
-                                    {{-- {{ $ticket->status->name }} --}}
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium0" style="background-color: {{ $ticket->status->color }}"> {{ $ticket->status->name }}</span>
                                 </td>
+                                <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-300">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium0" style="background-color: {{ $ticket->priority->color ?? '' }}"> {{ $ticket->priority->name ?? '--' }}</span>
+                                </td>
+                                <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-500">{{ $ticket->created_at }}</td>
                                 <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-500">
                                     <div>
                                         @can('user.edit')
-                                          <button wire:click="fetchEdit({{ $ticket->id }})" type="button" class="inline-flex items-center p-1 border border-transparent shadow-sm text-sm leading-4 font-medium rounded text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-                                                  <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-                                              </svg>                                              
-                                          </button>
+                                          <a href="{{ route('ticket-management.view', ['id' => $ticket->id]) }}" class="inline-flex items-center p-1 border border-transparent shadow-sm text-sm leading-4 font-medium rounded text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
+                                                  <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+                                                  <path fill-rule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 0 1 0-1.113ZM17.25 12a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z" clip-rule="evenodd" />
+                                              </svg> 
+                                          </a>
                                         @endcan
                                         @can('user.delete')
                                             <button type="button" class="inline-flex items-center p-1 border border-transparent shadow-sm text-xs leading-4 font-medium rounded text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
