@@ -87,6 +87,12 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="mt-3">
+                                <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
+                                <div class="mt-1">
+                                    <textarea wire:model="address" rows="4" name="address" id="address" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"></textarea>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

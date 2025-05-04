@@ -7,6 +7,7 @@ use App\Livewire\Admin\Department\Index as DepartmentIndex;
 use App\Livewire\Admin\PriorityReference\Index as PriorityReferenceIndex;
 use App\Livewire\Admin\Roles\Index as RolesIndex;
 use App\Livewire\Admin\StatusReference\Index as StatusReferenceIndex;
+use App\Livewire\Admin\Ticket\Index as TicketManagementIndex;
 use App\Livewire\Admin\UserManagement\Index as UserManagementIndex;
 use App\Livewire\Customer\Dashboard\Index as CustomerDashboardIndex;
 use App\Livewire\Customer\Ticket\Create as CustomerTicketCreate;
@@ -36,6 +37,10 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', UserManagementIndex::class)->name('index')->middleware('can:user.view');
             Route::get('/roles', RolesIndex::class)->name('role.index')->middleware('can:role.view');
             Route::get('/department', DepartmentIndex::class)->name('department.index')->middleware('can:department.view');
+        });
+
+        Route::prefix('ticket-management')->name('ticket-management.')->group(function () {
+            Route::get('/', TicketManagementIndex::class)->name('index');
         });
     });
 

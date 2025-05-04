@@ -30,13 +30,14 @@ class User extends Authenticatable
         return $this->hasOne(Department::class, 'id', 'department_id');
     }
 
-    // public function role(): HasOne
-    // {
-    //     return $this->hasOne(Roles::class, 'id', 'role_id');
-    // }
     public function role(): BelongsTo
     {
         return $this->belongsTo(Roles::class);
+    }
+
+    public function userDetails(): HasOne
+    {
+        return $this->hasOne(UserDetails::class, 'user_id', 'id');
     }
 
     /**
