@@ -15,6 +15,7 @@ class View extends Component
     public $status;
     public $priority;
     public $agent;
+    public $message;
 
     public function mount($id)
     {
@@ -42,6 +43,11 @@ class View extends Component
                 # code...
                 break;
         }
+    }
+
+    public function sendMessage()
+    {
+        dd($this->message);
     }
 
     public function render()
