@@ -76,7 +76,6 @@
             </div> --}}
         </div>
     </div>
-
     {{-- Modal Start --}}
     {{-- Modal End --}}
 

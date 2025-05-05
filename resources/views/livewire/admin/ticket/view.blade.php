@@ -1,4 +1,4 @@
-<div>
+<div class=" relative">
     <div class="lg:flex lg:items-center lg:justify-between pb-4 border-b border-gray-200">
         <div class="flex-1 min-w-0">
             <div class="flex items-center gap-2">
@@ -90,4 +90,15 @@
             {!! $ticket->description !!}
         </div>
     </div>
+
+    <div class="fixed bottom-6 right-8">
+        <div class=" relative">
+            <button type="button" class=" bg-blue-400 p-2 flex items-center justify-center w-16 h-16 shadow-md shadow-blue-300 rounded-full">
+                <img class=" w-24 aspect-square" src="{{ asset('img/live-chat.png') }}" alt="">
+            </button>
+            <x-admin.ticket.chat-modal />
+        </div>
+    </div>
+    {{-- Modal Start --}}
+    {{-- Modal End --}}
 </div>
