@@ -30,14 +30,14 @@
                     <tbody>
                         @forelse ($tickets as $ticket)
                             <tr class="bg-white border-b border-gray-200 divide-x divide-gray-200">
-                                <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-500">{{ $ticket->subject }}</td>
+                                <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-500">{{ Str::limit($ticket->subject, 30, '...') }}</td>
                                 <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-500">{{ $ticket->customer->userDetails->full_name ?? $ticket->customer->username }}</td>
                                 <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-500">{{ $ticket->department->name }}</td>
                                 <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-500">{{ $ticket->assignTo->userDetails->full_name ?? '--' }}</td>
-                                <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-300">
+                                <td class="px-4 py-1 whitespace-nowrap text-sm text-white">
                                     <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium0" style="background-color: {{ $ticket->status->color }}"> {{ $ticket->status->name }}</span>
                                 </td>
-                                <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-300">
+                                <td class="px-4 py-1 whitespace-nowrap text-sm text-white">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium0" style="background-color: {{ $ticket->priority->color ?? '' }}"> {{ $ticket->priority->name ?? '--' }}</span>
                                 </td>
                                 <td class="px-4 py-1 whitespace-nowrap text-sm text-gray-500">{{ $ticket->created_at }}</td>

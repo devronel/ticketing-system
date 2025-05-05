@@ -11,7 +11,7 @@
                     [Ticket #{{ $ticket->id }}] - {{ $ticket->subject }}
                 </h2>
             </div>
-            <div class="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-0 sm:space-x-6">
+            <div class="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-0 sm:space-x-3">
             
             <div class="mt-2 flex items-center text-sm text-white">
                 <span style="background-color: {{ $ticket->status->color }};" class=" inline-flex items-center px-2 py-0.5 rounded text-xs font-medium">
@@ -41,7 +41,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="flex-shrink-0 mr-1 size-4 text-gray-400">
                     <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" />
                     </svg>                  
-                Agent {{ $ticket->assignTo->username ?? '--' }}
+                Agent {{ $ticket->assignTo->userDetails->full_name ?? $ticket->assignTo->username ?? '--' }}
             </div>
             </div>
         </div>
@@ -55,24 +55,24 @@
         </p>
         <div class="flex items-center gap-2">
             <div>
-                <select wire:model="department" name="department" id="department" class="focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 mt-1 block w-full pl-3 pr-10 py-2 text-base focus:outline-none sm:text-sm rounded-md">
-                    <option selected disabled value="">Status</option>
+                <select wire:model.live="status" name="status" id="status" class="focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 mt-1 block w-full pl-3 pr-10 py-2 text-base focus:outline-none sm:text-sm rounded-md">
+                    <option value="">Status</option>
                     @foreach ($statuses as $status)
                         <option value="{{ $status->id }}">{{ $status->name }}</option>
                     @endforeach
                 </select>
             </div>
             <div>
-                <select wire:model="department" name="department" id="department" class="focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 mt-1 block w-full pl-3 pr-10 py-2 text-base focus:outline-none sm:text-sm rounded-md">
-                    <option selected disabled value="">Priority</option>
+                <select wire:model.live="priority" name="priority" id="priority" class="focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 mt-1 block w-full pl-3 pr-10 py-2 text-base focus:outline-none sm:text-sm rounded-md">
+                    <option value="">Priority</option>
                     @foreach ($priorities as $priority)
                         <option value="{{ $priority->id }}">{{ $priority->name }}</option>
                     @endforeach
                 </select>
             </div>
             <div>
-                <select wire:model="department" name="department" id="department" class="focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 mt-1 block w-full pl-3 pr-10 py-2 text-base focus:outline-none sm:text-sm rounded-md">
-                    <option selected disabled value="">Agents</option>
+                <select wire:model.live="agent" name="agent" id="agent" class="focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 mt-1 block w-full pl-3 pr-10 py-2 text-base focus:outline-none sm:text-sm rounded-md">
+                    <option value="">Agents</option>
                     @foreach ($agents as $agent)
                         <option value="{{ $agent->id }}">
                             {{ $agent->userDetails->full_name ?? $agent->username }}
