@@ -7,19 +7,25 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
-class TicketMessage
+class TicketMessageEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct()
+    public $ticketId;
+    public $userId;
+
+    public function __construct($ticketId, $userId)
     {
-        //
+        $this->ticketId = $ticketId;
+        $this->userId = $userId;
     }
 
     /**
@@ -30,7 +36,7 @@ class TicketMessage
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('channel-name'),
+            new Channel("ticket-message." . $this->ticketId),
         ];
     }
 }

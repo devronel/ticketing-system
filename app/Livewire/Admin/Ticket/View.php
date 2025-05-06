@@ -2,10 +2,14 @@
 
 namespace App\Livewire\Admin\Ticket;
 
+use App\Events\TicketMessageEvent;
 use App\Models\PriorityReference;
 use App\Models\StatusReference;
 use App\Models\Ticket;
+use App\Models\TicketMessage;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class View extends Component
@@ -47,7 +51,19 @@ class View extends Component
 
     public function sendMessage()
     {
-        dd($this->message);
+        TicketMessageEvent::broadcast(4, Auth::id());
+        // try {
+        //     $ticket = new TicketMessage();
+        //     $ticket->sender_id = Auth::id();
+        //     $ticket->ticket_id = $this->ticketId;
+        //     $ticket->message = $this->message;
+        //     if ($ticket->save()) {
+        //         broadcast(new EventsTicketMessage($ticket->id, Auth::id()));
+        //         broadcast(new EventsTicketMessage($ticket->id, Auth::id()));
+        //     }
+        // } catch (\Throwable $th) {
+        //     dd($th->getMessage());
+        // }
     }
 
     public function render()

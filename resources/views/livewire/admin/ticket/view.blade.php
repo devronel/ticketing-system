@@ -1,4 +1,4 @@
-<div class=" relative">
+<div x-data="data" class=" relative">
     <div class="lg:flex lg:items-center lg:justify-between pb-4 border-b border-gray-200">
         <div class="flex-1 min-w-0">
             <div class="flex items-center gap-2">
@@ -101,4 +101,20 @@
     </div>
     {{-- Modal Start --}}
     {{-- Modal End --}}
+
+    <script>
+        document.addEventListener('livewire:init', () => {
+            Alpine.data('data', () => ({
+                ticketId: @entangle('ticketId'),
+                userId: '{{ auth()->user()->id }}',
+                init(){
+                    Echo.channel(`ticket-message.${this.ticketId}`)
+                        .listen('TicketMessageEvent', event => {
+                            // console.log('Web Socket is Running!')
+                            console.log(event)
+                        })
+                }
+            }))
+        })
+    </script>
 </div>
