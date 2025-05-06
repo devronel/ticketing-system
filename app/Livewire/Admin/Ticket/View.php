@@ -14,6 +14,7 @@ use Livewire\Component;
 
 class View extends Component
 {
+    public $messages;
 
     public $ticketId;
     public $status;
@@ -28,6 +29,7 @@ class View extends Component
         $this->status = $ticket->status_id;
         $this->priority = $ticket->priority_id;
         $this->agent = $ticket->assigned_to;
+        $this->fetchMessage();
     }
 
     public function updating($property, $value)
@@ -49,21 +51,30 @@ class View extends Component
         }
     }
 
+    public function fetchMessage()
+    {
+        try {
+            $this->messages = TicketMessage::with(['sender'])->where('ticket_id', $this->ticketId)->get();
+            $this->dispatch('allMessage', messages: $this->messages);
+            $this->reset(['message']);
+        } catch (\Throwable $th) {
+            dd($th->getMessage());
+        }
+    }
+
     public function sendMessage()
     {
-        TicketMessageEvent::broadcast(4, Auth::id());
-        // try {
-        //     $ticket = new TicketMessage();
-        //     $ticket->sender_id = Auth::id();
-        //     $ticket->ticket_id = $this->ticketId;
-        //     $ticket->message = $this->message;
-        //     if ($ticket->save()) {
-        //         broadcast(new EventsTicketMessage($ticket->id, Auth::id()));
-        //         broadcast(new EventsTicketMessage($ticket->id, Auth::id()));
-        //     }
-        // } catch (\Throwable $th) {
-        //     dd($th->getMessage());
-        // }
+        try {
+            $ticket = new TicketMessage();
+            $ticket->sender_id = Auth::id();
+            $ticket->ticket_id = $this->ticketId;
+            $ticket->message = $this->message;
+            if ($ticket->save()) {
+                TicketMessageEvent::broadcast($this->ticketId, Auth::id());
+            }
+        } catch (\Throwable $th) {
+            dd($th->getMessage());
+        }
     }
 
     public function render()

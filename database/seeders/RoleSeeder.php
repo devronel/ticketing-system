@@ -157,17 +157,25 @@ class RoleSeeder extends Seeder
             'reference.edit',
             'reference.delete',
             'reference.view',
+            'all-ticket.create',
+            'all-ticket.edit',
+            'all-ticket.delete',
+            'all-ticket.view',
+            'my-ticket.create',
+            'my-ticket.edit',
+            'my-ticket.delete',
+            'my-ticket.view',
         ];
 
         foreach ($permissions as $permissionName) {
-            Permission::create(['name' => $permissionName]);
+            Permission::updateOrInsert(['name' => $permissionName]);
         }
 
         // Then, create roles
-        $superAdminRole = Roles::create(['name' => 'Super Admin']);
-        $adminRole = Roles::create(['name' => 'Admin']);
-        $agentRole = Roles::create(['name' => 'Agent']);
-        $customerRole = Roles::create(['name' => 'Customer']);
+        $superAdminRole = Roles::updateOrCreate(['name' => 'Super Admin']);
+        $adminRole = Roles::updateOrCreate(['name' => 'Admin']);
+        $agentRole = Roles::updateOrCreate(['name' => 'Agent']);
+        $customerRole = Roles::updateOrCreate(['name' => 'Customer']);
 
         // Assign permissions to roles
         $superAdminRole->permissions()->attach(Permission::all());

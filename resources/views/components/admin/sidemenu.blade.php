@@ -93,12 +93,43 @@
                     </svg>
                     Dashboard
                 </a>
-                <a href="{{ route('ticket-management.index') }}" class="{{ request()->routeIs('ticket-management.index') ? 'bg-teal-700 text-gray-100' : 'text-gray-100 hover:bg-teal-700' }} hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                {{-- <a href="{{ route('ticket-management.index') }}" class="{{ request()->routeIs('ticket-management.index') ? 'bg-teal-700 text-gray-100' : 'text-gray-100 hover:bg-teal-700' }} hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="group-hover:text-white mr-3 flex-shrink-0 h-6 w-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 0 1 0 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 0 1 0-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375Z" />
                       </svg>                                           
                     Tickets
-                </a>
+                </a> --}}
+                <div x-data="{ openTicketManagement: false }">
+                    <button @click="openTicketManagement = !openTicketManagement" class="{{ request()->routeIs('barangay-official.index') ? 'bg-teal-700 text-gray-100' : 'text-gray-100 hover:bg-teal-700' }} w-full hover:text-white group flex items-center justify-between px-2 py-2 text-sm font-medium rounded-md">
+                        <div class=" flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="group-hover:text-white mr-3 flex-shrink-0 h-6 w-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 0 1 0 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 0 1 0-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375Z" />
+                            </svg>                                                                                              
+                            Ticket Management
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="group-hover:text-white mr-3 flex-shrink-0 h-4 w-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                        </svg>                          
+                    </button>
+                    <div x-show="openTicketManagement || currentUrl.startsWith('/ticket-management')" class=" ml-4 mt-2 flex flex-col gap-1">
+                        @can('all-ticket.view')
+                            <a href="{{ route('ticket-management.index') }}" class="{{ request()->routeIs('ticket-management.index') ? 'bg-teal-700 text-gray-100' : 'text-gray-100 hover:bg-teal-700' }} hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-folder-kanban-icon lucide-folder-kanban group-hover:text-white mr-3 flex-shrink-0 size-5">
+                                    <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/><path d="M8 10v4"/><path d="M12 10v2"/><path d="M16 10v6"/>
+                                </svg>               
+                                All Tickets
+                            </a>
+                        @endcan
+                        @can('my-ticket.view')
+                            <a href="{{ route('ticket-management.my-ticket') }}" class="{{ request()->routeIs('ticket-management.my-ticket') ? 'bg-teal-700 text-gray-100' : 'text-gray-100 hover:bg-teal-700' }} hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tag-icon lucide-tag group-hover:text-white mr-3 flex-shrink-0 size-5">
+                                    <path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/>
+                                </svg>                    
+                                My Ticket
+                            </a>
+                        @endcan
+                    </div>
+                </div>
                 @can('user.view')
                     <div x-data="{ openUserManagement: false }">
                         <button @click="openUserManagement = !openUserManagement" class="{{ request()->routeIs('barangay-official.index') ? 'bg-teal-700 text-gray-100' : 'text-gray-100 hover:bg-teal-700' }} w-full hover:text-white group flex items-center justify-between px-2 py-2 text-sm font-medium rounded-md">

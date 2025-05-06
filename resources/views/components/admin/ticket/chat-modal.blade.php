@@ -1,4 +1,4 @@
-<div>
+<div x-data="chatModalData">
     <div class="absolute bottom-20 right-0 rounded w-80 max-h-80 overflow-hidden bg-gray-50 shadow-md border border-gray-200">
         <div class="">
             <div class=" bg-gray-900 p-2 rounded-t flex items-center justify-between">
@@ -10,44 +10,47 @@
                 </button>
             </div>
             <div class="px-2 pt-2 pb-20 h-[300px] overflow-auto">
-                {{-- chat conversation --}}
                 <div class="flex flex-col gap-3">
-                    <div class=" flex items-center justify-start">
-                        <div class=" max-w-40 w-auto bg-gray-200 shadow py-2 px-4 flex flex-col items-end rounded-lg">
-                            <p class=" text-sm">Hello there</p>
-                            <p class="text-xs text-gray-400">7:00AM</p>
+                    {{-- @forelse ($this->messages as $message)
+                        @if ($message->sender_id === auth()->user()->id)
+                            <div class=" flex items-center justify-end">
+                                <div class=" max-w-40 w-auto bg-yellow-500 shadow py-2 px-4 flex flex-col items-end rounded-lg">
+                                    <p class=" text-sm text-gray-900">{{ $message->message }}</p>
+                                    <p class="text-xs text-gray-600">7:00AM</p>
+                                </div>
+                            </div>
+                        @else
+                            <div class=" flex items-center justify-start">
+                                <div class=" max-w-40 w-auto bg-gray-200 shadow py-2 px-4 flex flex-col items-end rounded-lg">
+                                    <p class=" text-sm">{{ $message->message }}</p>
+                                    <p class="text-xs text-gray-400">7:00AM</p>
+                                </div>
+                            </div>       
+                        @endif
+                    @empty
+                        <div class="flex flex-col justify-center items-center gap-2">
+                            <img class=" w-36 aspect-square" src="{{ asset('img/no-message.png') }}" alt="">
+                            <p class=" text-sm text-gray-700 font-bold">No Available Message</p>
                         </div>
-                    </div>
-                    <div class=" flex items-center justify-end">
-                        <div class=" max-w-40 w-auto bg-yellow-500 shadow py-2 px-4 flex flex-col items-end rounded-lg">
-                            <p class=" text-sm text-gray-900">Hi, how are you doing?</p>
-                            <p class="text-xs text-gray-600">7:00AM</p>
-                        </div>
-                    </div>
-                    <div class=" flex items-center justify-start">
-                        <div class=" max-w-40 w-auto bg-gray-200 shadow py-2 px-4 flex flex-col items-end rounded-lg">
-                            <p class=" text-sm">Hello there</p>
-                            <p class="text-xs text-gray-400">7:00AM</p>
-                        </div>
-                    </div>
-                    <div class=" flex items-center justify-end">
-                        <div class=" max-w-40 w-auto bg-yellow-500 shadow py-2 px-4 flex flex-col items-end rounded-lg">
-                            <p class=" text-sm text-gray-900">Hi, how are you doing?</p>
-                            <p class="text-xs text-gray-600">7:00AM</p>
-                        </div>
-                    </div>
-                    <div class=" flex items-center justify-start">
-                        <div class=" max-w-40 w-auto bg-gray-200 shadow py-2 px-4 flex flex-col items-end rounded-lg">
-                            <p class=" text-sm">Hello there</p>
-                            <p class="text-xs text-gray-400">7:00AM</p>
-                        </div>
-                    </div>
-                    <div class=" flex items-center justify-end">
-                        <div class=" max-w-40 w-auto bg-yellow-500 shadow py-2 px-4 flex flex-col items-end rounded-lg">
-                            <p class=" text-sm text-gray-900">Hi, how are you doing?</p>
-                            <p class="text-xs text-gray-600">7:00AM</p>
-                        </div>
-                    </div>
+                    @endforelse --}}
+                    <template x-for="message in messages">
+                        <template x-if="message.sender_id === 1">
+                            <div class=" flex items-center justify-end">
+                                <div class=" max-w-40 w-auto bg-yellow-500 shadow py-2 px-4 flex flex-col items-end rounded-lg">
+                                    <p x-text="message.message" class=" text-sm text-gray-900"></p>
+                                    <p class="text-xs text-gray-600">7:00AM</p>
+                                </div>
+                            </div>
+                        </template>
+                        <template x-if="message.sender_id != 1">
+                            <div class=" flex items-center justify-start">
+                                <div class=" max-w-40 w-auto bg-gray-200 shadow py-2 px-4 flex flex-col items-end rounded-lg">
+                                    <p x-text="message.message" class=" text-sm"></p>
+                                    <p class="text-xs text-gray-400">7:00AM</p>
+                                </div>
+                            </div>     
+                        </template>
+                    </template>
                 </div>
             </div>
             <div class="absolute bottom-0 w-full p-1 bg-gray-200">
@@ -62,4 +65,22 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+        <script>
+            document.addEventListener('livewire:init', () => {
+                Alpine.data('chatModalData', () => ({
+                    ticketId: @entangle('ticketId'),
+                    messages: @json($this->messages),
+                    init(){
+                        console.log(this.messages)
+                        Echo.channel(`ticket-message.${this.ticketId}`)
+                            .listen('TicketMessageEvent', event => {
+                                this.$wire.fetchMessage();
+                            })
+                    }
+                }))
+            })
+        </script>
+    @endpush
 </div>

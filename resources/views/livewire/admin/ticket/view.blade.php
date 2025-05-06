@@ -1,12 +1,14 @@
-<div x-data="data" class=" relative">
+<div class=" relative">
     <div class="lg:flex lg:items-center lg:justify-between pb-4 border-b border-gray-200">
         <div class="flex-1 min-w-0">
             <div class="flex items-center gap-2">
-                <a href="{{ route('ticket-management.index') }}">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m7.49 12-3.75 3.75m0 0 3.75 3.75m-3.75-3.75h16.5V4.499" />
-                      </svg>                                       
-                </a>
+                @can('all-ticket.view')
+                    <a href="{{ route('ticket-management.index') }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m7.49 12-3.75 3.75m0 0 3.75 3.75m-3.75-3.75h16.5V4.499" />
+                        </svg>                                       
+                    </a>
+                @endcan
                 <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
                     [Ticket #{{ $ticket->id }}] - {{ $ticket->subject }}
                 </h2>
@@ -62,24 +64,26 @@
                     @endforeach
                 </select>
             </div>
-            <div>
-                <select wire:model.live="priority" name="priority" id="priority" class="focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 mt-1 block w-full pl-3 pr-10 py-2 text-base focus:outline-none sm:text-sm rounded-md">
-                    <option value="">Priority</option>
-                    @foreach ($priorities as $priority)
-                        <option value="{{ $priority->id }}">{{ $priority->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div>
-                <select wire:model.live="agent" name="agent" id="agent" class="focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 mt-1 block w-full pl-3 pr-10 py-2 text-base focus:outline-none sm:text-sm rounded-md">
-                    <option value="">Agents</option>
-                    @foreach ($agents as $agent)
-                        <option value="{{ $agent->id }}">
-                            {{ $agent->userDetails->full_name ?? $agent->username }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
+            @can('all-ticket.edit')
+                <div>
+                    <select wire:model.live="priority" name="priority" id="priority" class="focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 mt-1 block w-full pl-3 pr-10 py-2 text-base focus:outline-none sm:text-sm rounded-md">
+                        <option value="">Priority</option>
+                        @foreach ($priorities as $priority)
+                            <option value="{{ $priority->id }}">{{ $priority->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <select wire:model.live="agent" name="agent" id="agent" class="focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 mt-1 block w-full pl-3 pr-10 py-2 text-base focus:outline-none sm:text-sm rounded-md">
+                        <option value="">Agents</option>
+                        @foreach ($agents as $agent)
+                            <option value="{{ $agent->id }}">
+                                {{ $agent->userDetails->full_name ?? $agent->username }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            @endcan
         </div>
     </div>
     <div class="py-4">
@@ -102,19 +106,19 @@
     {{-- Modal Start --}}
     {{-- Modal End --}}
 
-    <script>
+    {{-- <script>
         document.addEventListener('livewire:init', () => {
             Alpine.data('data', () => ({
                 ticketId: @entangle('ticketId'),
-                userId: '{{ auth()->user()->id }}',
+                messages: @entangle('messages'),
                 init(){
+                    console.log(this.messages)
                     Echo.channel(`ticket-message.${this.ticketId}`)
                         .listen('TicketMessageEvent', event => {
-                            // console.log('Web Socket is Running!')
-                            console.log(event)
+                            this.$wire.fetchMessage();
                         })
                 }
             }))
         })
-    </script>
+    </script> --}}
 </div>
