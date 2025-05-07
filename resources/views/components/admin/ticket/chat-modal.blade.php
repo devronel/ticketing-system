@@ -9,8 +9,8 @@
                     </svg>                      
                 </button>
             </div>
-            <div class="px-2 pt-2 pb-20 h-[300px] overflow-auto">
-                <div class="flex flex-col gap-3">
+            <div id="chatContainer" class="px-2 pt-2 pb-20 h-[300px] overflow-auto">
+                <div class="flex flex-col gap-5">
                     {{-- @forelse ($this->messages as $message)
                         @if ($message->sender_id === auth()->user()->id)
                             <div class=" flex items-center justify-end">
@@ -33,23 +33,35 @@
                             <p class=" text-sm text-gray-700 font-bold">No Available Message</p>
                         </div>
                     @endforelse --}}
-                    <template x-for="message in messages">
-                        <template x-if="message.sender_id === 1">
-                            <div class=" flex items-center justify-end">
-                                <div class=" max-w-40 w-auto bg-yellow-500 shadow py-2 px-4 flex flex-col items-end rounded-lg">
-                                    <p x-text="message.message" class=" text-sm text-gray-900"></p>
-                                    <p class="text-xs text-gray-600">7:00AM</p>
+                    <template x-for="message in messages" :key="message.id">
+                        <div >
+                            <template x-if="message.sender_id === {{ auth()->user()->id }}">
+                                <div class=" flex flex-col items-end justify-end">
+                                    <div class=" max-w-52 w-auto bg-yellow-500 shadow py-2 px-4 flex flex-col items-end rounded-lg">
+                                        <p x-text="message.message" class=" text-sm text-gray-900"></p>
+                                    </div>
+                                    <div class="mt-1">
+                                        <p x-text="moment(message.created_at).format('LT')" class="text-[9px] text-gray-600 text-right"></p>
+                                    </div>
                                 </div>
-                            </div>
-                        </template>
-                        <template x-if="message.sender_id != 1">
-                            <div class=" flex items-center justify-start">
-                                <div class=" max-w-40 w-auto bg-gray-200 shadow py-2 px-4 flex flex-col items-end rounded-lg">
-                                    <p x-text="message.message" class=" text-sm"></p>
-                                    <p class="text-xs text-gray-400">7:00AM</p>
-                                </div>
-                            </div>     
-                        </template>
+                            </template>
+                            <template x-if="message.sender_id !== {{ auth()->user()->id }}">
+                                <div class=" flex flex-col items-start justify-start">
+                                    <div class=" max-w-52 w-auto bg-gray-200 shadow py-2 pl-2 pr-4 flex items-start gap-2 rounded-lg">
+                                        <div class=" flex-shrink-0 w-6 h-6 rounded-full border border-blue-500 flex items-center gap-1">
+                                            <img class=" w-6 aspect-square" src="{{ asset('img/user-placeholder.png') }}" alt="">
+                                        </div>
+                                        <div>
+                                            <p x-text="message.message" class=" text-sm"></p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-1 flex items-center gap-1">
+                                        <p x-text="message.sender.role.name + ' ' + (message.sender.user_details != null ? message.sender.user_details.first_name : message.sender.username)" class="text-[9px] text-gray-600 text-right"></p>
+                                        <p x-text="moment(message.created_at).format('LT')" class="text-[9px] text-gray-600 text-right"></p>
+                                    </div>
+                                </div>     
+                            </template>
+                        </div>
                     </template>
                 </div>
             </div>
@@ -71,14 +83,23 @@
             document.addEventListener('livewire:init', () => {
                 Alpine.data('chatModalData', () => ({
                     ticketId: @entangle('ticketId'),
+                    userId: '{{ auth()->user()->id }}',
                     messages: @json($this->messages),
                     init(){
-                        console.log(this.messages)
+                        this.scrollToBottom()
                         Echo.channel(`ticket-message.${this.ticketId}`)
                             .listen('TicketMessageEvent', event => {
-                                this.$wire.fetchMessage();
+                                this.messages.push(event.ticket)
+                                this.scrollToBottom()
+                                this.$wire.resetComponent();
                             })
-                    }
+                    },
+                    scrollToBottom() {
+                        this.$nextTick(() => {
+                            const el = document.getElementById('chatContainer');
+                            el.scrollTop = el.scrollHeight;
+                        });
+                    },
                 }))
             })
         </script>

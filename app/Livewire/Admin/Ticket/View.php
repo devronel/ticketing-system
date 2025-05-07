@@ -8,6 +8,7 @@ use App\Models\StatusReference;
 use App\Models\Ticket;
 use App\Models\TicketMessage;
 use App\Models\User;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
@@ -29,7 +30,8 @@ class View extends Component
         $this->status = $ticket->status_id;
         $this->priority = $ticket->priority_id;
         $this->agent = $ticket->assigned_to;
-        $this->fetchMessage();
+
+        $this->messages = TicketMessage::with(['sender.userDetails'])->where('ticket_id', $this->ticketId)->get();
     }
 
     public function updating($property, $value)
@@ -51,17 +53,6 @@ class View extends Component
         }
     }
 
-    public function fetchMessage()
-    {
-        try {
-            $this->messages = TicketMessage::with(['sender'])->where('ticket_id', $this->ticketId)->get();
-            $this->dispatch('allMessage', messages: $this->messages);
-            $this->reset(['message']);
-        } catch (\Throwable $th) {
-            dd($th->getMessage());
-        }
-    }
-
     public function sendMessage()
     {
         try {
@@ -70,11 +61,17 @@ class View extends Component
             $ticket->ticket_id = $this->ticketId;
             $ticket->message = $this->message;
             if ($ticket->save()) {
-                TicketMessageEvent::broadcast($this->ticketId, Auth::id());
+                $newMessage = TicketMessage::with(['sender.userDetails'])->where('id', $ticket->id)->first();
+                TicketMessageEvent::broadcast($this->ticketId, Auth::id(), $newMessage);
             }
         } catch (\Throwable $th) {
             dd($th->getMessage());
         }
+    }
+
+    public function resetComponent()
+    {
+        $this->reset(['message']);
     }
 
     public function render()

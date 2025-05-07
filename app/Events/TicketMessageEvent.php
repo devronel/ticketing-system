@@ -21,11 +21,13 @@ class TicketMessageEvent implements ShouldBroadcast
      */
     public $ticketId;
     public $userId;
+    public $ticket;
 
-    public function __construct($ticketId, $userId)
+    public function __construct($ticketId, $userId, $ticket)
     {
         $this->ticketId = $ticketId;
         $this->userId = $userId;
+        $this->ticket = $ticket;
     }
 
     /**
