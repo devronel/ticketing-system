@@ -13,18 +13,24 @@ class ChatBox extends Component
 
     use WithPagination;
 
-    public $paginatePage = 5;
+    public $isChatBoxOpen = false;
+
+    public $paginatePage = 10;
     public $ticketId;
     public $message;
 
     public function sendMessage()
     {
+        $this->validate([
+            'message' => 'required'
+        ]);
         try {
             $ticket = new TicketMessage();
             $ticket->sender_id = Auth::id();
             $ticket->ticket_id = $this->ticketId;
             $ticket->message = $this->message;
             if ($ticket->save()) {
+                $this->reset(['message']);
                 $newMessage = TicketMessage::with(['sender.userDetails'])->where('id', $ticket->id)->first();
                 TicketMessageEvent::broadcast($this->ticketId, Auth::id(), $newMessage);
             }
@@ -35,12 +41,12 @@ class ChatBox extends Component
 
     public function incrementPage()
     {
-        $this->paginatePage = $this->paginatePage + 5;
+        $this->paginatePage = $this->paginatePage + 10;
     }
 
     public function pageReset()
     {
-        $this->paginatePage = 5;
+        $this->paginatePage = 10;
         $this->resetPage();
     }
 

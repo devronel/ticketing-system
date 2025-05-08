@@ -1,14 +1,14 @@
 <div x-data="chatModalData" class="fixed bottom-6 right-8">
     <div class=" relative">
-        <button type="button" class=" bg-blue-400 p-2 flex items-center justify-center w-16 h-16 shadow-md shadow-blue-300 rounded-full">
+        <button @click="isChatBoxOpen = !isChatBoxOpen" type="button" class=" bg-blue-400 p-2 flex items-center justify-center w-16 h-16 shadow-md shadow-blue-300 rounded-full">
             <img class=" w-24 aspect-square" src="{{ asset('img/live-chat.png') }}" alt="">
         </button>
-        <div>
+        <div x-cloak x-show="isChatBoxOpen">
             <div class="absolute bottom-20 right-0 rounded w-80 max-h-80 overflow-hidden bg-gray-50 shadow-md border border-gray-200">
                 <div class="">
                     <div class=" bg-gray-900 p-2 rounded-t flex items-center justify-between">
                         <p class=" text-sm text-white">Chat Support</p>
-                        <button class="text-white">
+                        <button @click="closeChatBox()" class="text-white">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                             </svg>                      
@@ -114,7 +114,7 @@
             document.addEventListener('livewire:init', () => {
                 Alpine.data('chatModalData', () => ({
                     ticketId: @entangle('ticketId'),
-                    userId: '{{ auth()->user()->id }}',
+                    isChatBoxOpen: @entangle('isChatBoxOpen'),
                     init(){
                         this.scrollToBottom()
 
@@ -123,14 +123,18 @@
                             .listen('TicketMessageEvent', event => {
                                 this.$wire.pageReset();
                                 this.scrollToBottom()
-                                this.$wire.resetComponent();
                             })
 
                         this.$refs.chatContainer.addEventListener('scroll', () => {
                             if (this.$refs.chatContainer.scrollTop === 0) {
-                                this.$wire.incrementPage()
+                                setTimeout(() => {
+                                    this.$wire.incrementPage()
+                                }, 500);
                             }
                         })
+                    },
+                    closeChatBox(){
+                        this.isChatBoxOpen = false
                     },
                     scrollToBottom() {
                         this.$nextTick(() => {
