@@ -31,7 +31,10 @@ class View extends Component
         $this->priority = $ticket->priority_id;
         $this->agent = $ticket->assigned_to;
 
-        $this->messages = TicketMessage::with(['sender.userDetails'])->where('ticket_id', $this->ticketId)->get();
+        $this->messages = TicketMessage::with(['sender.userDetails'])->where('ticket_id', $this->ticketId)
+            ->limit(10)
+            ->orderBy('created_at', 'desc')
+            ->get();
     }
 
     public function updating($property, $value)

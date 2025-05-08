@@ -84,15 +84,24 @@
                 Alpine.data('chatModalData', () => ({
                     ticketId: @entangle('ticketId'),
                     userId: '{{ auth()->user()->id }}',
-                    messages: @json($this->messages),
+                    messages: @json($this->messages).reverse(),
                     init(){
                         this.scrollToBottom()
+
+                        // FETCH NEW MESSAGE IN REAL TIME
                         Echo.channel(`ticket-message.${this.ticketId}`)
                             .listen('TicketMessageEvent', event => {
                                 this.messages.push(event.ticket)
                                 this.scrollToBottom()
                                 this.$wire.resetComponent();
                             })
+
+                        // WATCH THE LENGHT OF MESSAGES, MAKE SURE THAT IT ALWAYS 10
+                        this.$watch('messages', (value) => {
+                            if(value.length > 10){
+                                this.messages.shift()
+                            }
+                        })
                     },
                     scrollToBottom() {
                         this.$nextTick(() => {

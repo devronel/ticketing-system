@@ -95,16 +95,7 @@
         </div>
     </div>
 
-    <div class="fixed bottom-6 right-8">
-        <div class=" relative">
-            <button type="button" class=" bg-blue-400 p-2 flex items-center justify-center w-16 h-16 shadow-md shadow-blue-300 rounded-full">
-                <img class=" w-24 aspect-square" src="{{ asset('img/live-chat.png') }}" alt="">
-            </button>
-            <x-admin.ticket.chat-modal />
-        </div>
-    </div>
-    {{-- Modal Start --}}
-    {{-- Modal End --}}
+    <livewire:admin.component.ticket.chat-box :ticketId="$this->ticketId" />
 
     {{-- <script>
         document.addEventListener('livewire:init', () => {
