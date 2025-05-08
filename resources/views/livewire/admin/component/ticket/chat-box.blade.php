@@ -14,8 +14,53 @@
                             </svg>                      
                         </button>
                     </div>
-                    <div id="chatContainer" class="px-2 pt-2 pb-20 h-[300px] overflow-auto">
+                    <div x-ref="chatContainer" id="chatContainer" class="px-2 pt-2 pb-20 h-[300px] overflow-auto">
                         <div class="flex flex-col gap-5">
+                            @forelse ($messages as $date => $messagesByDate)
+                                <div class=" flex items-center gap-1">
+                                    <div class="w-full h-[1px] bg-gray-300"></div>
+                                    <p class=" text-xs text-gray-500">{{ $date }}</p>
+                                    <div class="w-full h-[1px] bg-gray-300"></div>
+                                </div>
+                                @foreach ($messagesByDate as $message)
+                                    @if ($message->sender_id === auth()->user()->id)
+                                        <div class=" flex items-center justify-end">
+                                            <div class="flex flex-col items-end">
+                                                <div class="max-w-52 w-auto bg-yellow-500 shadow py-2 px-4 rounded-lg">
+                                                    <p class=" text-sm text-gray-900">{{ $message->message }}</p>
+                                                </div>
+                                                <div class="mt-1">
+                                                    <p class="text-[9px] text-gray-600 text-right">{{ $message->created_at->format('h:i A') }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div class=" flex flex-col items-start justify-start">
+                                            <div class=" max-w-52 w-auto bg-gray-200 shadow py-2 pl-2 pr-4 flex items-start gap-2 rounded-lg">
+                                                <div class=" flex-shrink-0 w-6 h-6 rounded-full border border-blue-500 flex items-center gap-1">
+                                                    <img class=" w-6 aspect-square" src="{{ asset('img/user-placeholder.png') }}" alt="">
+                                                </div>
+                                                <div>
+                                                    <p class=" text-sm">{{ $message->message }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="mt-1 flex items-center gap-1">
+                                                <p class="text-[9px] text-gray-600 text-right">
+                                                    {{ $message->sender->role->name . ' ' . (!is_null($message->sender->userDetails) ? $message->sender->userDetails->first_name : $message->sender->username) }}
+                                                </p>
+                                                <p x-text="moment(message.created_at).format('LT')" class="text-[9px] text-gray-600 text-right"></p>
+                                            </div>
+                                        </div> 
+                                    @endif
+                                @endforeach
+                            @empty
+                                <div class="flex flex-col justify-center items-center gap-2">
+                                    <img class=" w-36 aspect-square" src="{{ asset('img/no-message.png') }}" alt="">
+                                    <p class=" text-sm text-gray-700 font-bold">No Available Message</p>
+                                </div>
+                            @endforelse
+                        </div>
+                        {{-- <div class="flex flex-col gap-5">
                             <template x-for="message in messages" :key="message.id">
                                 <div >
                                     <template x-if="message.sender_id === {{ auth()->user()->id }}">
@@ -46,7 +91,7 @@
                                     </template>
                                 </div>
                             </template>
-                        </div>
+                        </div> --}}
                     </div>
                     <div class="absolute bottom-0 w-full p-1 bg-gray-200">
                         <div class="flex items-center gap-1">
@@ -70,23 +115,20 @@
                 Alpine.data('chatModalData', () => ({
                     ticketId: @entangle('ticketId'),
                     userId: '{{ auth()->user()->id }}',
-                    // messages: @json($this->messages).reverse(),
-                    messages: '{{ $messages }}',
                     init(){
                         this.scrollToBottom()
 
                         // FETCH NEW MESSAGE IN REAL TIME
                         Echo.channel(`ticket-message.${this.ticketId}`)
                             .listen('TicketMessageEvent', event => {
-                                this.messages.push(event.ticket)
+                                this.$wire.pageReset();
                                 this.scrollToBottom()
                                 this.$wire.resetComponent();
                             })
 
-                        // WATCH THE LENGHT OF MESSAGES, MAKE SURE THAT IT ALWAYS 10
-                        this.$watch('messages', (value) => {
-                            if(value.length > 10){
-                                this.messages.shift()
+                        this.$refs.chatContainer.addEventListener('scroll', () => {
+                            if (this.$refs.chatContainer.scrollTop === 0) {
+                                this.$wire.incrementPage()
                             }
                         })
                     },

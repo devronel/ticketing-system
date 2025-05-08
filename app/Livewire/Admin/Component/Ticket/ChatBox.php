@@ -13,8 +13,8 @@ class ChatBox extends Component
 
     use WithPagination;
 
+    public $paginatePage = 5;
     public $ticketId;
-    // public $messages;
     public $message;
 
     public function sendMessage()
@@ -33,6 +33,17 @@ class ChatBox extends Component
         }
     }
 
+    public function incrementPage()
+    {
+        $this->paginatePage = $this->paginatePage + 5;
+    }
+
+    public function pageReset()
+    {
+        $this->paginatePage = 5;
+        $this->resetPage();
+    }
+
     public function resetComponent()
     {
         $this->reset(['message']);
@@ -40,18 +51,15 @@ class ChatBox extends Component
 
     public function render()
     {
-        // $this->messages = TicketMessage::with(['sender.userDetails'])->where('ticket_id', $this->ticketId)
-        //     ->limit(10)
-        //     ->orderBy('created_at', 'desc')
-        //     ->get();
-        $msg = TicketMessage::with(['sender.userDetails'])->where('ticket_id', $this->ticketId)
+        $messages = TicketMessage::with(['sender.userDetails'])->where('ticket_id', $this->ticketId)
             ->orderBy('created_at', 'desc')
-            ->cursorPaginate(5);
-        // dd($msg);
+            ->cursorPaginate($this->paginatePage)
+            ->reverse();
+        $groupedByDate = $messages->groupBy(function ($message) {
+            return \Carbon\Carbon::parse($message->created_at)->toDateString();
+        });
         return view('livewire.admin.component.ticket.chat-box', [
-            'messages' => TicketMessage::with(['sender.userDetails'])->where('ticket_id', $this->ticketId)
-                ->orderBy('created_at', 'desc')
-                ->cursorPaginate(5)
+            'messages' => $groupedByDate
         ]);
     }
 }
