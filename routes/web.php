@@ -13,7 +13,9 @@ use App\Livewire\Admin\Ticket\View as TicketManagementView;
 use App\Livewire\Admin\UserManagement\Index as UserManagementIndex;
 use App\Livewire\Customer\Dashboard\Index as CustomerDashboardIndex;
 use App\Livewire\Customer\Ticket\Create as CustomerTicketCreate;
+use App\Livewire\Customer\Ticket\Edit as CustomerTicketEdit;
 use App\Livewire\Customer\Ticket\Index as CustomerTicketIndex;
+use App\Livewire\Customer\Ticket\View as CustomerTikectView;
 use Illuminate\Support\Facades\Route;
 
 // Authentication
@@ -55,5 +57,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', CustomerDashboardIndex::class)->name('dashboard.index');
         Route::get('/my-ticket', CustomerTicketIndex::class)->name('ticket.index');
         Route::get('/my-ticket/create', CustomerTicketCreate::class)->name('ticket.create');
+        Route::get('/my-ticket/view/{id}', CustomerTikectView::class)->name('ticket.view');
+        Route::get('/my-ticket/edit/{id}', CustomerTicketEdit::class)->name('ticket.edit');
     });
 });

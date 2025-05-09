@@ -17,7 +17,7 @@
         </div>
 
         @stack('scripts')
-        {{-- <script>
+        <script>
             document.addEventListener('livewire:init', () => {
                 Livewire.on('alert-on', (payload) => {
                     console.log(payload)
@@ -29,6 +29,6 @@
                     })
                 });
             })
-        </script> --}}
+        </script>
     </body>
 </html>

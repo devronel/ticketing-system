@@ -51,7 +51,7 @@
                 })
     
                 Livewire.on('fetch-summernote-value', (event) => {
-                    editor.summernote('code', event.incidentDetails)
+                    editor.summernote('code', event.content)
                 });
     
                 Livewire.on('reset-summernote-value', (event) => {
