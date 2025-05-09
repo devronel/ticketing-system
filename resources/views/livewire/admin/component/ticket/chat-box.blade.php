@@ -1,6 +1,6 @@
 <div x-data="chatModalData" class="fixed bottom-6 right-8">
     <div class=" relative">
-        <button @click="isChatBoxOpen = !isChatBoxOpen" type="button" class=" bg-blue-400 p-2 flex items-center justify-center w-16 h-16 shadow-md shadow-blue-300 rounded-full">
+        <button @click="openChatBox()" type="button" class=" bg-blue-400 p-2 flex items-center justify-center w-16 h-16 shadow-md shadow-blue-300 rounded-full">
             <img class=" w-24 aspect-square" src="{{ asset('img/live-chat.png') }}" alt="">
         </button>
         <div x-cloak x-show="isChatBoxOpen">
@@ -117,7 +117,7 @@
                     isChatBoxOpen: @entangle('isChatBoxOpen'),
                     init(){
                         this.scrollToBottom()
-
+                        
                         // FETCH NEW MESSAGE IN REAL TIME
                         Echo.channel(`ticket-message.${this.ticketId}`)
                             .listen('TicketMessageEvent', event => {
@@ -132,6 +132,10 @@
                                 }, 500);
                             }
                         })
+                    },
+                    openChatBox(){
+                        this.isChatBoxOpen = !this.isChatBoxOpen
+                        this.scrollToBottom()
                     },
                     closeChatBox(){
                         this.isChatBoxOpen = false
