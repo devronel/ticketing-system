@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChatSUpportController;
 use App\Livewire\Admin\Auth\Login as LoginIndex;
 use App\Livewire\Admin\Dashboard\Index as DashboardIndex;
 use App\Livewire\Admin\Department\Index as DepartmentIndex;
@@ -50,6 +51,9 @@ Route::middleware(['auth'])->group(function () {
 
             // My Ticket
             Route::get('/my-ticket', MyTicket::class)->name('my-ticket')->middleware('can:my-ticket.view');
+
+            // API
+            Route::get('/chat-messages/{ticket_id}', [ChatSUpportController::class, 'index']);
         });
     });
 

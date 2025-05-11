@@ -15,7 +15,7 @@
                         </button>
                     </div>
                     <div x-ref="chatContainer" id="chatContainer" class="px-2 pt-2 pb-20 h-[300px] overflow-auto">
-                        <div class="flex flex-col gap-5">
+                        {{-- <div class="flex flex-col gap-5">
                             @forelse ($messages as $date => $messagesByDate)
                                 <div class=" flex items-center gap-1">
                                     <div class="w-full h-[1px] bg-gray-300"></div>
@@ -59,39 +59,46 @@
                                     <p class=" text-sm text-gray-700 font-bold">No Available Message</p>
                                 </div>
                             @endforelse
-                        </div>
-                        {{-- <div class="flex flex-col gap-5">
-                            <template x-for="message in messages" :key="message.id">
-                                <div >
-                                    <template x-if="message.sender_id === {{ auth()->user()->id }}">
-                                        <div class=" flex flex-col items-end justify-end">
-                                            <div class=" max-w-52 w-auto bg-yellow-500 shadow py-2 px-4 flex flex-col items-end rounded-lg">
-                                                <p x-text="message.message" class=" text-sm text-gray-900"></p>
-                                            </div>
-                                            <div class="mt-1">
-                                                <p x-text="moment(message.created_at).format('LT')" class="text-[9px] text-gray-600 text-right"></p>
-                                            </div>
-                                        </div>
-                                    </template>
-                                    <template x-if="message.sender_id !== {{ auth()->user()->id }}">
-                                        <div class=" flex flex-col items-start justify-start">
-                                            <div class=" max-w-52 w-auto bg-gray-200 shadow py-2 pl-2 pr-4 flex items-start gap-2 rounded-lg">
-                                                <div class=" flex-shrink-0 w-6 h-6 rounded-full border border-blue-500 flex items-center gap-1">
-                                                    <img class=" w-6 aspect-square" src="{{ asset('img/user-placeholder.png') }}" alt="">
-                                                </div>
-                                                <div>
-                                                    <p x-text="message.message" class=" text-sm"></p>
-                                                </div>
-                                            </div>
-                                            <div class="mt-1 flex items-center gap-1">
-                                                <p x-text="message.sender.role.name + ' ' + (message.sender.user_details != null ? message.sender.user_details.first_name : message.sender.username)" class="text-[9px] text-gray-600 text-right"></p>
-                                                <p x-text="moment(message.created_at).format('LT')" class="text-[9px] text-gray-600 text-right"></p>
-                                            </div>
-                                        </div>     
-                                    </template>
-                                </div>
-                            </template>
                         </div> --}}
+                        <div class="flex flex-col gap-5">
+                            <template x-for="(messageByDates, key) in messages" :key="key">
+                                <div class=" flex items-center gap-1">
+                                    <div class="w-full h-[1px] bg-gray-300"></div>
+                                    <p x-text="key" class=" text-xs text-gray-500"></p>
+                                    <div class="w-full h-[1px] bg-gray-300"></div>
+                                </div>
+                                <template x-for="message in messageByDates" :key="message.id">
+                                    <div >
+                                        <template x-if="message.sender_id === {{ auth()->user()->id }}">
+                                            <div class=" flex flex-col items-end justify-end">
+                                                <div class=" max-w-52 w-auto bg-yellow-500 shadow py-2 px-4 flex flex-col items-end rounded-lg">
+                                                    <p x-text="message.message" class=" text-sm text-gray-900"></p>
+                                                </div>
+                                                <div class="mt-1">
+                                                    <p x-text="moment(message.created_at).format('LT')" class="text-[9px] text-gray-600 text-right"></p>
+                                                </div>
+                                            </div>
+                                        </template>
+                                        <template x-if="message.sender_id !== {{ auth()->user()->id }}">
+                                            <div class=" flex flex-col items-start justify-start">
+                                                <div class=" max-w-52 w-auto bg-gray-200 shadow py-2 pl-2 pr-4 flex items-start gap-2 rounded-lg">
+                                                    <div class=" flex-shrink-0 w-6 h-6 rounded-full border border-blue-500 flex items-center gap-1">
+                                                        <img class=" w-6 aspect-square" src="{{ asset('img/user-placeholder.png') }}" alt="">
+                                                    </div>
+                                                    <div>
+                                                        <p x-text="message.message" class=" text-sm"></p>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-1 flex items-center gap-1">
+                                                    <p x-text="message.sender.role.name + ' ' + (message.sender.user_details != null ? message.sender.user_details.first_name : message.sender.username)" class="text-[9px] text-gray-600 text-right"></p>
+                                                    <p x-text="moment(message.created_at).format('LT')" class="text-[9px] text-gray-600 text-right"></p>
+                                                </div>
+                                            </div>     
+                                        </template>
+                                    </div>
+                                </template>
+                            </template>
+                        </div>
                     </div>
                     <div class="absolute bottom-0 w-full p-1 bg-gray-200">
                         <div class="flex items-center gap-1">
@@ -115,6 +122,7 @@
                 Alpine.data('chatModalData', () => ({
                     ticketId: @entangle('ticketId'),
                     isChatBoxOpen: @entangle('isChatBoxOpen'),
+                    messages: [],
                     init(){
                         this.scrollToBottom()
                         
@@ -125,13 +133,27 @@
                                 this.scrollToBottom()
                             })
 
-                        this.$refs.chatContainer.addEventListener('scroll', () => {
-                            if (this.$refs.chatContainer.scrollTop === 0) {
-                                setTimeout(() => {
-                                    this.$wire.incrementPage()
-                                }, 500);
+                        // this.$refs.chatContainer.addEventListener('scroll', () => {
+                        //     if (this.$refs.chatContainer.scrollTop === 0) {
+                        //         setTimeout(() => {
+                        //             this.$wire.incrementPage()
+                        //         }, 500);
+                        //     }
+                        // })
+
+                        // Fetch messages
+                        this.fetchMessages()
+                    },
+                    async fetchMessages(){
+                        try {
+                            const messages = await axios.get(`/ticket-management/chat-messages/${this.ticketId}`)
+                            if(messages.data.success){
+                                this.messages = messages.data.payload
+                                console.log(this.messages)
                             }
-                        })
+                        } catch (error) {
+                            console.log(error.response)
+                        }
                     },
                     openChatBox(){
                         this.isChatBoxOpen = !this.isChatBoxOpen
