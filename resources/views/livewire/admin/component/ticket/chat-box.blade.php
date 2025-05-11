@@ -4,7 +4,7 @@
             <img class=" w-24 aspect-square" src="{{ asset('img/live-chat.png') }}" alt="">
         </button>
         <div x-cloak x-show="isChatBoxOpen">
-            <div class="absolute bottom-20 right-0 rounded w-80 max-h-80 bg-gray-50 shadow-md border border-gray-200">
+            <div class="absolute bottom-28 right-0 rounded w-80 max-h-80 bg-gray-50 shadow-md border border-gray-200">
                 <div class="">
                     <div class=" bg-gray-900 p-2 rounded-t flex items-center justify-between">
                         <p class=" text-sm text-white">Chat Support</p>
@@ -102,7 +102,7 @@
                         </template>
                     </div>
                     {{-- Chat Container End --}}
-                    <div class=" h-auto w-full p-1 bg-gray-200">
+                    <div class=" h-auto w-full p-1 bg-blue-300">
                         <div class="flex items-center gap-1">
                             <input wire:model="message" type="text" name="message" id="message" class="shadow-sm focus:ring-yellow-500 focus:border-yellow-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="Enter message here...">
                             <button wire:click="sendMessage" class="inline-flex items-center px-2 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
@@ -126,36 +126,32 @@
                     isChatBoxOpen: @entangle('isChatBoxOpen'),
                     messages: [],
                     init(){
-                        this.scrollToBottom()
                         
                         // FETCH NEW MESSAGE IN REAL TIME
                         Echo.channel(`ticket-message.${this.ticketId}`)
                             .listen('TicketMessageEvent', event => {
-                                // this.$wire.pageReset();
-                                this.scrollToBottom()
                                 this.fetchMessages(this.ticketId, 10)
+                                this.$wire.resetComponent()
+                                setTimeout(() => {
+                                    this.scrollToBottom()
+                                }, 250)
                             })
 
                         // Fetch old message
                         this.$refs.chatContainer.addEventListener('scroll', () => {
                             if (this.$refs.chatContainer.scrollTop === 0) {
+                                this.paginate = this.paginate + 10
                                 setTimeout(() => {
-                                    // this.$wire.incrementPage()
-                                    this.paginate = this.paginate + 10
                                     this.fetchMessages(this.ticketId, this.paginate)
                                 }, 500);
                             }
                         })
-
-                        // Fetch messages in page initial load
-                        this.fetchMessages(this.ticketId, this.paginate)
                     },
                     async fetchMessages(ticketId, paginate){
                         try {
                             const messages = await axios.get(`/ticket-management/chat-messages/${ticketId}/${paginate}`)
                             if(messages.data.success){
                                 this.messages = messages.data.payload
-                                console.log(this.messages)
                             }
                         } catch (error) {
                             console.log(error.response)
@@ -163,16 +159,19 @@
                     },
                     openChatBox(){
                         this.isChatBoxOpen = !this.isChatBoxOpen
-                        this.scrollToBottom()
+                        this.fetchMessages(this.ticketId, this.paginate)
+                        setTimeout(() => {
+                            this.scrollToBottom()
+                        }, 250)
                     },
                     closeChatBox(){
                         this.isChatBoxOpen = false
                     },
                     scrollToBottom() {
-                        this.$nextTick(() => {
-                            const el = document.getElementById('chatContainer');
-                            el.scrollTop = el.scrollHeight - 46;
-                        });
+                        const el = document.getElementById('chatContainer');
+                        el.scrollTop = el.scrollHeight;
+                        // this.$nextTick(() => {
+                        // });
                     },
                 }))
             })

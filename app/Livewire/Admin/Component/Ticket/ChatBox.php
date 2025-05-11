@@ -13,9 +13,8 @@ class ChatBox extends Component
 
     use WithPagination;
 
-    public $isChatBoxOpen = true;
+    public $isChatBoxOpen = false;
 
-    public $paginatePage = 10;
     public $ticketId;
     public $message;
 
@@ -39,17 +38,6 @@ class ChatBox extends Component
         }
     }
 
-    public function incrementPage()
-    {
-        $this->paginatePage = $this->paginatePage + 10;
-    }
-
-    public function pageReset()
-    {
-        $this->paginatePage = 10;
-        $this->resetPage();
-    }
-
     public function resetComponent()
     {
         $this->reset(['message']);
@@ -57,15 +45,6 @@ class ChatBox extends Component
 
     public function render()
     {
-        $messages = TicketMessage::with(['sender.userDetails'])->where('ticket_id', $this->ticketId)
-            ->orderBy('created_at', 'desc')
-            ->cursorPaginate($this->paginatePage)
-            ->reverse();
-        $groupedByDate = $messages->groupBy(function ($message) {
-            return \Carbon\Carbon::parse($message->created_at)->toDateString();
-        });
-        return view('livewire.admin.component.ticket.chat-box', [
-            'messages' => $groupedByDate
-        ]);
+        return view('livewire.admin.component.ticket.chat-box');
     }
 }
