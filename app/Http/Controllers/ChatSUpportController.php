@@ -12,7 +12,7 @@ class ChatSUpportController extends Controller
         try {
             $messages = TicketMessage::with(['sender.userDetails'])->where('ticket_id', $request->ticket_id)
                 ->orderBy('created_at', 'desc')
-                ->cursorPaginate(10)
+                ->cursorPaginate($request->paginate)
                 ->reverse();
             $groupedByDate = $messages->groupBy(function ($message) {
                 return \Carbon\Carbon::parse($message->created_at)->toDateString();

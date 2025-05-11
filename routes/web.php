@@ -53,7 +53,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/my-ticket', MyTicket::class)->name('my-ticket')->middleware('can:my-ticket.view');
 
             // API
-            Route::get('/chat-messages/{ticket_id}', [ChatSUpportController::class, 'index']);
+            Route::get('/chat-messages/{ticket_id}/{paginate}', [ChatSUpportController::class, 'index']);
         });
     });
 

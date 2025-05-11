@@ -4,7 +4,7 @@
             <img class=" w-24 aspect-square" src="{{ asset('img/live-chat.png') }}" alt="">
         </button>
         <div x-cloak x-show="isChatBoxOpen">
-            <div class="absolute bottom-20 right-0 rounded w-80 max-h-80 overflow-hidden bg-gray-50 shadow-md border border-gray-200">
+            <div class="absolute bottom-20 right-0 rounded w-80 max-h-80 bg-gray-50 shadow-md border border-gray-200">
                 <div class="">
                     <div class=" bg-gray-900 p-2 rounded-t flex items-center justify-between">
                         <p class=" text-sm text-white">Chat Support</p>
@@ -14,7 +14,8 @@
                             </svg>                      
                         </button>
                     </div>
-                    <div x-ref="chatContainer" id="chatContainer" class="px-2 pt-2 pb-20 h-[300px] overflow-auto">
+                    {{-- Chat Container Start --}}
+                    <div x-ref="chatContainer" id="chatContainer" class="px-2 py-2 h-[280px] overflow-auto">
                         {{-- <div class="flex flex-col gap-5">
                             @forelse ($messages as $date => $messagesByDate)
                                 <div class=" flex items-center gap-1">
@@ -60,8 +61,8 @@
                                 </div>
                             @endforelse
                         </div> --}}
-                        <div class="flex flex-col gap-5">
-                            <template x-for="(messageByDates, key) in messages" :key="key">
+                        <template x-for="(messageByDates, key) in messages" :key="key">
+                            <div class="flex flex-col gap-5">
                                 <div class=" flex items-center gap-1">
                                     <div class="w-full h-[1px] bg-gray-300"></div>
                                     <p x-text="key" class=" text-xs text-gray-500"></p>
@@ -97,10 +98,11 @@
                                         </template>
                                     </div>
                                 </template>
-                            </template>
-                        </div>
+                            </div>
+                        </template>
                     </div>
-                    <div class="absolute bottom-0 w-full p-1 bg-gray-200">
+                    {{-- Chat Container End --}}
+                    <div class=" h-auto w-full p-1 bg-gray-200">
                         <div class="flex items-center gap-1">
                             <input wire:model="message" type="text" name="message" id="message" class="shadow-sm focus:ring-yellow-500 focus:border-yellow-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="Enter message here...">
                             <button wire:click="sendMessage" class="inline-flex items-center px-2 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
@@ -112,7 +114,6 @@
                     </div>
                 </div>
             </div>
-        
         </div>
     </div>
 
@@ -121,6 +122,7 @@
             document.addEventListener('livewire:init', () => {
                 Alpine.data('chatModalData', () => ({
                     ticketId: @entangle('ticketId'),
+                    paginate: 10,
                     isChatBoxOpen: @entangle('isChatBoxOpen'),
                     messages: [],
                     init(){
@@ -129,24 +131,28 @@
                         // FETCH NEW MESSAGE IN REAL TIME
                         Echo.channel(`ticket-message.${this.ticketId}`)
                             .listen('TicketMessageEvent', event => {
-                                this.$wire.pageReset();
+                                // this.$wire.pageReset();
                                 this.scrollToBottom()
+                                this.fetchMessages(this.ticketId, 10)
                             })
 
-                        // this.$refs.chatContainer.addEventListener('scroll', () => {
-                        //     if (this.$refs.chatContainer.scrollTop === 0) {
-                        //         setTimeout(() => {
-                        //             this.$wire.incrementPage()
-                        //         }, 500);
-                        //     }
-                        // })
+                        // Fetch old message
+                        this.$refs.chatContainer.addEventListener('scroll', () => {
+                            if (this.$refs.chatContainer.scrollTop === 0) {
+                                setTimeout(() => {
+                                    // this.$wire.incrementPage()
+                                    this.paginate = this.paginate + 10
+                                    this.fetchMessages(this.ticketId, this.paginate)
+                                }, 500);
+                            }
+                        })
 
-                        // Fetch messages
-                        this.fetchMessages()
+                        // Fetch messages in page initial load
+                        this.fetchMessages(this.ticketId, this.paginate)
                     },
-                    async fetchMessages(){
+                    async fetchMessages(ticketId, paginate){
                         try {
-                            const messages = await axios.get(`/ticket-management/chat-messages/${this.ticketId}`)
+                            const messages = await axios.get(`/ticket-management/chat-messages/${ticketId}/${paginate}`)
                             if(messages.data.success){
                                 this.messages = messages.data.payload
                                 console.log(this.messages)
@@ -165,7 +171,7 @@
                     scrollToBottom() {
                         this.$nextTick(() => {
                             const el = document.getElementById('chatContainer');
-                            el.scrollTop = el.scrollHeight;
+                            el.scrollTop = el.scrollHeight - 46;
                         });
                     },
                 }))

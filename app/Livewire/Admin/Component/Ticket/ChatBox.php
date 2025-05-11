@@ -13,7 +13,7 @@ class ChatBox extends Component
 
     use WithPagination;
 
-    public $isChatBoxOpen = false;
+    public $isChatBoxOpen = true;
 
     public $paginatePage = 10;
     public $ticketId;
