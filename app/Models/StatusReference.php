@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class StatusReference extends Model
 {
@@ -10,4 +11,9 @@ class StatusReference extends Model
         'name',
         'color'
     ];
+
+    public function tickets(): HasMany
+    {
+        return $this->hasMany(Ticket::class, 'status_id', 'id');
+    }
 }

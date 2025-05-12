@@ -7,26 +7,29 @@
         <script>
             document.addEventListener('livewire:init', () => {
                 Alpine.data('ticketCountStatus', () => ({
+                    ticketCountPerStatus: @entangle('ticketCountPerStatus'),
+                    labels: [],
+                    counts: [],
+                    colors: [],
                     init(){
+
+                        this.ticketCountPerStatus.forEach(value => {
+                            this.labels.push(value.status)
+                            this.counts.push(value.count)
+                            this.colors.push(value.color)
+                        });
+
                         const data = {
-                            labels: [
-                                'Red',
-                                'Blue',
-                                'Yellow'
-                            ],
+                            labels: this.labels,
                             datasets: [{
-                                label: 'My First Dataset',
-                                data: [300, 50, 100],
-                                backgroundColor: [
-                                    'rgb(255, 99, 132)',
-                                    'rgb(54, 162, 235)',
-                                    'rgb(255, 205, 86)'
-                                ],
+                                label: 'Tickets by Status',
+                                data: this.counts,
+                                backgroundColor: this.colors,
                                 hoverOffset: 4
                             }]
                         };
                         const config = {
-                            type: 'doughnut',
+                            type: 'pie',
                             data: data,
                             options: {
                                 responsive: true,
