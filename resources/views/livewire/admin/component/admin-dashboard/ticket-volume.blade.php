@@ -12,7 +12,7 @@
                 </div>
             </div>
         </div>
-        <div wire:ignore>
+        <div wire:ignore class="">
             <canvas id="ticketVolume"></canvas>
         </div>
     </div>
@@ -21,34 +21,14 @@
         <script>
             document.addEventListener('livewire:init', () => {
                 Alpine.data('ticketVolume', () => ({
-                    ticketCountPerDate: @entangle('ticketCountPerDate'),
-                    startDate: @entangle('startDate'),
-                    endDate: @entangle('endDate'),
-                    ticketDate: [],
-                    ticketCount: [],
                     init(){
+
                         let chartInstance;
                         const lineChartId = document.getElementById('ticketVolume')
-                        this.ticketCountPerDate.forEach(value => {
-                            this.ticketDate.push(value.date)
-                            this.ticketCount.push(value.count)
-                        });
+
                         const config = {
                             type: 'line',
-                            data: {
-                                labels: this.ticketDate,
-                                datasets: [
-                                    {
-                                        label: 'Ticket',
-                                        data: this.ticketCount,
-                                        borderColor: [],
-                                        backgroundColor: [],
-                                        pointStyle: 'circle',
-                                        pointRadius: 10,
-                                        pointHoverRadius: 15
-                                    }
-                                ]
-                            },
+                            data: @this.chartData,
                             options: {
                                 responsive: true,
                                 plugins: {
@@ -60,13 +40,13 @@
                             }
                         };
 
+
                         chartInstance = new Chart(lineChartId, config)
 
-                        Livewire.on('refresh-chart', () => {
-                            if(chartInstance){
-                                chartInstance.destroy()
-                            }
-                            chartInstance = new Chart(lineChartId, config)
+                        Livewire.on('refresh-chart', (event) => {
+                            console.log(event)
+                            chartInstance.data = event.chartData
+                            chartInstance.update()
                         })
                     },
                 }))

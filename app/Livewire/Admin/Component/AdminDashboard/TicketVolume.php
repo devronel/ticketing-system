@@ -9,6 +9,7 @@ use Livewire\Component;
 class TicketVolume extends Component
 {
 
+    public $chartData;
     public $ticketCountPerDate = [];
     public $startDate;
     public $endDate;
@@ -52,10 +53,10 @@ class TicketVolume extends Component
         //         'count' => $ticketCounts->get($formatted, 0)
         //     ];
         // }
-
-        $this->startDate = now()->startOfMonth()->toDateString();
-        $this->endDate = now()->endOfMonth()->toDateString();
-        $this->getTicketVolumn($this->startDate, $this->endDate);
+        $startDate = now()->startOfMonth();
+        $this->startDate = $startDate->toDateString();
+        $this->endDate = $startDate->addDay(10)->toDateString();
+        $this->chartData = $this->getTicketVolume();
     }
 
     public function updated($property, $value)
@@ -64,25 +65,50 @@ class TicketVolume extends Component
             $this->endDate = $value;
         }
 
-        $this->dispatch('refresh-chart');
+        if ($property == 'startDate') {
+            $this->startDate = $value;
+        }
+
+
+        $this->chartData = $this->getTicketVolume();
+        $this->dispatch('refresh-chart', chartData: $this->chartData);
     }
 
-    public function getTicketVolumn($startDate, $endDate)
+    public function getTicketVolume()
     {
-        $stDate = Carbon::parse($startDate);
-        $edDate = Carbon::parse($endDate);
-        $tickets = Ticket::whereBetween('created_at', [$stDate, $edDate])->get();
-        for ($day = $stDate->copy(); $day->lte($edDate); $day->addDay()) {
-            $dateString = $day->format('Y-m-d');
+        try {
+            $stDate = Carbon::parse($this->startDate);
+            $edDate = Carbon::parse($this->endDate);
+            $dates = [];
+            $counts = [];
+            $tickets = Ticket::whereBetween('created_at', [$stDate, $edDate])->get();
+            for ($day = $stDate->copy(); $day->lte($edDate); $day->addDay()) {
+                $dateString = $day->format('Y-m-d');
 
-            $count = $tickets->filter(function ($ticket) use ($dateString) {
-                return $ticket->created_at->format('Y-m-d') === $dateString;
-            })->count();
+                $count = $tickets->filter(function ($ticket) use ($dateString) {
+                    return $ticket->created_at->format('Y-m-d') === $dateString;
+                })->count();
 
-            $this->ticketCountPerDate[] = [
-                'date' => $dateString,
-                'count' => $count,
+                $dates[] = $dateString;
+                $counts[] = $count;
+            }
+
+            return [
+                'labels' => $dates,
+                'datasets' => [
+                    [
+                        'label' => 'Ticket',
+                        'data' => $counts,
+                        'borderColor' =>  '#EAB308',
+                        'backgroundColor' => '#F59E0B',
+                        'pointStyle' => 'circle',
+                        'pointRadius' => 7,
+                        'pointHoverRadius' => 10
+                    ]
+                ]
             ];
+        } catch (\Throwable $th) {
+            $this->dispatch('alert-on', title: 'Error', message: $th->getMessage(), icon: 'error');
         }
     }
 
