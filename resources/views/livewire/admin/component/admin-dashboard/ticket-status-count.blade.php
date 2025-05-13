@@ -1,4 +1,4 @@
-<div x-data="ticketCountStatus" class="mt-6">
+<div x-data="ticketCountStatus" class="">
     <div class=" bg-gray-100 border border-gray-300 shadow rounded p-3">
         <canvas id="ticketCountStatus"></canvas>
     </div>
