@@ -28,6 +28,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+
+        // User
+        Gate::define('admin-dashboard.view', [DashboardPolicy::class, 'view']);
+        Gate::define('admin-dashboard.edit', [DashboardPolicy::class, 'edit']);
+        Gate::define('admin-dashboard.create', [DashboardPolicy::class, 'create']);
+        Gate::define('admin-dashboard.delete', [DashboardPolicy::class, 'delete']);
+
         // User
         Gate::define('user.view', [UserPolicy::class, 'view']);
         Gate::define('user.edit', [UserPolicy::class, 'edit']);

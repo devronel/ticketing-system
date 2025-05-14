@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChatSUpportController;
 use App\Livewire\Admin\Auth\Login as LoginIndex;
+use App\Livewire\Admin\Dashboard\AgentDashboard;
 use App\Livewire\Admin\Dashboard\Index as DashboardIndex;
 use App\Livewire\Admin\Department\Index as DepartmentIndex;
 use App\Livewire\Admin\PriorityReference\Index as PriorityReferenceIndex;
@@ -26,9 +27,15 @@ Route::delete('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth'])->group(function () {
     Route::middleware(['is_admin'])->group(function () {
-        // Dashboard Route
-        Route::prefix('dashboard')->name('dashboard.')->group(function () {
+
+        // Admin Dashboard Route
+        Route::middleware(['can:admin-dashboard.view'])->prefix('dashboard')->name('dashboard.')->group(function () {
             Route::get('/', DashboardIndex::class)->name('index');
+        });
+
+        // Agent Dashboard
+        Route::prefix('agent-dashboard')->name('agent-dashboard.')->group(function () {
+            Route::get('/', AgentDashboard::class)->name('index');
         });
 
         // References Route

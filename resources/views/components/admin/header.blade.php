@@ -6,8 +6,9 @@
         </svg>
     </button>
     <div class="flex-1 px-4 flex justify-between">
-      <div class="flex-1 flex items-center text-xl font-bold">
-        <h2>Welcome Admin!</h2>
+      <div class=" flex flex-col items-start justify-center text-xl font-bold">
+        <h2>Welcome {{ auth()->user()->userDetails->full_name ?? auth()->user()->username }}</h2>
+        <h2 class=" text-xs font-normal">Role: <span class="font-bold">{{ auth()->user()->role->name }}</span></h2>
       </div>
       <div class="ml-4 flex items-center md:ml-6">
         <!-- Profile dropdown -->

@@ -22,7 +22,12 @@ class Login extends Component
         try {
             if (Auth::attempt($credentials)) {
                 session()->regenerate();
-                return $this->redirect('/dashboard');
+
+                if (Auth::user()->can('admin-dashboard.view')) {
+                    return $this->redirect('/dashboard');
+                } else {
+                    return $this->redirect('/agent-dashboard');
+                }
             }
 
             return back()->withErrors([

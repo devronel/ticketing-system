@@ -141,6 +141,14 @@ class RoleSeeder extends Seeder
         // ]);
 
         $permissions = [
+            'admin-dashboard.create',
+            'admin-dashboard.edit',
+            'admin-dashboard.delete',
+            'admin-dashboard.view',
+            'agent-dashboard.create',
+            'agent-dashboard.edit',
+            'agent-dashboard.delete',
+            'agent-dashboard.view',
             'user.create',
             'user.edit',
             'user.delete',
